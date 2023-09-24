@@ -1,0 +1,168 @@
+\documentclass[a4paper]{amsart}
+
+\usepackage{enumerate}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=blue,
+	urlcolor=blue,
+	citecolor=blue,
+}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[margin=3cm]{geometry}
+\usepackage{mathpazo}
+\usepackage{url}
+\usepackage[labelformat=simple]{subcaption}
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{cleveref}
+\usepackage{amsrefs}
+\usepackage{bbm}
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem*{thm*}{Theorem}
+\newtheorem*{con*}{Conjecture}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{conj}[thm]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{ex}[thm]{Example}
+\newtheorem{quest}[thm]{Question}
+\newtheorem{obs}[thm]{Observation}
+\newtheorem{prob}{Problem}
+
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\tr}{\mathrm{t}}
+
+\title{Problem Set 1}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Instructions}
+
+Three problem sets count for 40\% of the module assessment, and the exam counts
+for the other~60\%. The lowest of the three sets will be ignored.
+
+Each homework should be submitted Canvas as an archive file (zip or tar)
+consisting of
+\begin{enumerate}
+  \item your python code (a \texttt{.py} file or a Jupyter Notebook),
+  \item a pdf version of a written report,
+  \item any data file used as input for your python program.
+\end{enumerate}
+The \texttt{.py} file (or Jupyter Notebook) should be a machine readable version
+of the appendix code which, when run, reproduces your answers. Develop your own
+Python code rather than simply using existing Python modules for linear
+regression (e.g.\ \texttt{statsmodels}). The \texttt{.pdf} document should
+contain your answers to the questions in which you provide a description of the
+mathematical methods used. There should be no Python code. 
+
+The homework will be graded according to a scheme in which {\em content} (i.e.\
+correctness of your answers, choice of methods, python code) is weighted at 70\%
+and {\em presentation} (i.e.\ manner in which you present your answers, methods
+and code) is weighted at 30\%.
+
+Please submit on Canvas by \textbf{09.10.2023} as a single archive file
+(tar or zip or similar).
+
+\vspace{1em}
+
+\hrule
+
+\vspace{1em}
+
+\begin{prob}
+
+\end{prob}
+
+
+\subsection{}
+The scatter plot
+% $$\includegraphics[height=6cm]{data1.eps}$$
+represents a set of points
+$(x_1,y_1), (x_2,y_2), \ldots, (x_{100},y_{100})$ produced using a
+model $y_i = \beta_0 +\beta_1x_i +\beta_2x_i^2 +\epsilon_i$ with
+independent random errors $\epsilon_i$ of mean $0$ and finite
+variance.  The numerical values of the points $(x_i,y_i)$
+are contained in the file \verb!data1.txt! where the first $9$
+lines look as
+follows:
+
+% \verbatiminput{data0.txt}
+
+
+\begin{enumerate}
+\item Determine the values of $b_0$, $b_1$, $b_2$ for which
+$$y = b_0 + b_1x + b_2 x^2$$
+is the least squares estimator for the model  $y_i = \beta_0 +\beta_1x_i +\beta_2x_i^2 +\epsilon_i$.
+
+\item Exhibit a single plot of the data points (in say blue)
+ and the curve $y = b_0 + b_1x + b_2 x^2$ (in say red).
+
+\item Determine the coefficient of determination $r^2=1-(SSE/SSTO)$ for this least squares fit.
+\end{enumerate}
+
+\subsection{}
+The observations below, taken on $10$ incoming shipments of chemicals in drums arriving at a warehouse, show number of drums in shipment ($x_1$), total weight of shipment ($x_2$, in hundred pounds), and number of man-minutes required to handle the shipment ($y_i$):
+$$\begin{array}{r|llllllllll}
+ i:&1&2&3&4&5&6&7&8&9&10\\
+\hline x_{i1}: & 7 &18 &5 &14 &11 &5 &23 &9&16 &5\\
+x_{i2}: & 5.11 &16.70 &3.20 &7.00 &11.00 &4.00 &22.10 &7.00 &10.60 &4.80\\
+y_i: &58 &152 &41 &93 &101 &38 &203 &78 &117 &44
+\end{array}$$
+
+\begin{enumerate}
+\item Assume a model
+\begin{equation}
+y_i = \beta_0+\beta_1x_{i1} + \beta_2 x_{i2} +\epsilon_i
+\label{eq1}
+\end{equation}
+in which errors are independent $N(0,\sigma^2)$.
+\begin{enumerate}
+
+\item Determine the least squares estimator $y=b_0+b_1x_1 + b_2x_2$.
+
+\item Test whether there is a regression equation, using a level of significance of 0.05.
+
+\item Estimate $\beta_1$ and $\beta_2$ jointly, using a 95\% family confidence coefficient.
+
+\item Management desires simultaneous interval estimates of the mean handling times for five typical shipments specified to be as follows:
+$$\begin{array}{r|lllll}
+&1 &2 &3 &4 &5\\
+\hline x_1: &5 &6 &10 &14 &20\\
+x_2: &3.20 &4.80 &7.00 &10.00 &18.00
+\end{array}$$
+Obtain the family of estimates, using a 90\% family confidence coefficient.
+\end{enumerate}
+
+
+\item Obtain the residuals and make appropriate residual plots to ascertain whether model (\ref{eq1}) with normal error terms is appropriate. Summarize your findings.
+\end{enumerate}
+
+
+
+\end{document}
