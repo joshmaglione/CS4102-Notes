@@ -1011,10 +1011,10 @@ as row vectors, then
 We generalize from two vectors to $m$ vectors. Write 
 \begin{align*}
 	X = \begin{pmatrix}
-		x_1 \\ x_2 \\ \vdots \\ x_m
+		x_1' \\ x_2' \\ \vdots \\ x_m'
 	\end{pmatrix}
 \end{align*}
-where $x_i$ is a row vector. Note that the rows of $X$ correspond to
+where $x_i'$ is a row vector. Note that the rows of $X$ correspond to
 measurements of a particular type, and the columns of $X$ correspond to all
 measurements of a particular trail. Using \Cref{eqn:vec-covar}, we define the
 \textbf{covariance matrix} of $X$ to be 
@@ -1076,6 +1076,16 @@ and the graph of the data $Y = PX$ is seen in \Cref{fig:pca-example3}.
     \caption{A new basis for our data.}
 	\label{fig:pca-example3}
 \end{figure}
+
+\begin{remark}
+	There is a whole art of scaling data in a pre-processing stage that we will
+	not explore in this course. Basically, if one variable ranges between $\pm
+	10$ and another $\pm 10^3$, the second variable will bias the process simply
+	by its scale. There are many different methods to rescale the data as not to
+	lose (too much) information. \textit{Throughout we will assume our data has
+	roughly the same scale and not worry about rescaling}, but in practice this
+	is an important issue.
+\end{remark}
 
 \subsubsection{Assumptions of PCA}
 
@@ -1176,16 +1186,19 @@ possible.
 
 \medskip
 
-A recipe for cooking up the principal components.
+We give a recipe for cooking up the principal components.
 \begin{description}
-	\item[Given:] $m$ data points in $\R^n$,
-	\item[Return:] $m$ principal components  
+	\item[Given:] $n$ data points $x_i\in\R^m$ (of roughly the same scale),
+	\item[Return:] $m$ principal components.
 \end{description}
 \begin{enumerate}
-	\item 
+	\item Compute the mean of each coordinate: $\mu_j = \sum_i x_{ij}$,
+	\item Organize the normalised data into a matrix $X = (x_{ij} - \mu_j)$,
+	\item Compute the covariance matrix $C_X$ of $X$,
+	\item Compute the eigenvectors of $C_X$, and sort them based on their
+	eigenvalues: largest is first and smallest is last.
+	\item Return the (ordered) orthonormal basis of eigenvectors. 
 \end{enumerate}
-
-
 
 
 
