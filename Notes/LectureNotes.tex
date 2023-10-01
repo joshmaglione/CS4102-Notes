@@ -1022,7 +1022,7 @@ measurements of a particular trail. Using \Cref{eqn:vec-covar}, we define the
 	C_X &= \dfrac{1}{n} XX^{\tr} .
 \end{align*} 
 
-\begin{lem}
+\begin{lem}\label{lem:covariance-properties}
 	\begin{enumerate}
 		\item The matrix $C_X$ is symmetric. That is, $C_X = C_X^{\tr}$.
 		\item The diagonal entries of $C_X$ are variances.
@@ -1200,9 +1200,38 @@ We give a recipe for cooking up the principal components.
 	\item Return the (ordered) orthonormal basis of eigenvectors. 
 \end{enumerate}
 
+PCA is a phrase used for this algorithm together with its analysis, and one of
+the main ways PCA is performed is by taking only the first $k$ principal
+components (rather than all $m$). Here, $k$ is usually determined by the
+\textit{eigenvalues}. 
 
+Both $C_X$ and $C_Y$ have the same eigenvalues: $\lambda_1 \geq \lambda_2 \geq
+\cdots \geq \lambda_m$. Since the trace of matrix is the sum of its eigenvalues,
+both $C_X$ and $C_Y$ have the same trace. In other words, 
+\begin{align*}
+	\mathrm{tr}(C_X) &= \sum_{i=1}^m \lambda_i,
+\end{align*}
+and by \Cref{lem:covariance-properties}, the sum of the variances is the sum of
+the eigenvalues. Because we view variability as an important measurement to keep
+track of, we can choose a $k$ that both maximizes the amount of variability
+``seen'' and while minimizing the value of $k$. This is a bit more of an art
+than a science, but one general rule could be to choose the smallest $k$ such
+that 
+\begin{align*} 
+	\dfrac{\sum_{i=1}^k\lambda_i}{\sum_{i=1}^m\lambda_i} \geq 0.95.
+\end{align*} 
+For such a $k$, one might say that the first $k$ principal components capture
+$95\%$ of the total variability.
 
+\textbf{So then do the rest of the principal components not matter?}
 
+\subsection{Projections}
+
+The answer to the previous question is essentially ``No'', and it can be helpful
+to consider an idealised example. Suppose $k < m$ and 
+\[ 
+	\lambda_{k+1} = \lambda_{k+2} = \cdots = \lambda_m = 0. 
+\]
 
 
 
