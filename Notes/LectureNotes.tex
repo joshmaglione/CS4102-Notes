@@ -1179,10 +1179,13 @@ complex eigenvalues. For example, the matrix
 		0 & -1 \\ 1 & 0 
 	\end{pmatrix}
 \end{align*}
-has eigenvalues $i$ and $-i$, for $i=\sqrt{-1}$. \textbf{Is it always possible
-to find a real matrix $P$ such that \Cref{eqn:CY-CX} holds?} The answer is
-``Yes,'' and we will prove it later. For now, let us assume it is always
-possible. 
+has eigenvalues $i$ and $-i$, for $i=\sqrt{-1}$. 
+\begin{quest}\label{quest:PCA-possible}
+	Is it always possible to find a real matrix $P$ such that \Cref{eqn:CY-CX}
+	holds?
+\end{quest}
+The answer to \Cref{quest:PCA-possible} is ``Yes,'' and we will prove it later.
+For now, let us assume it is always possible. 
 
 \medskip
 
@@ -1217,21 +1220,112 @@ track of, we can choose a $k$ that both maximizes the amount of variability
 ``seen'' and while minimizing the value of $k$. This is a bit more of an art
 than a science, but one general rule could be to choose the smallest $k$ such
 that 
-\begin{align*} 
+\begin{align} \label{eqn:k-rule}
 	\dfrac{\sum_{i=1}^k\lambda_i}{\sum_{i=1}^m\lambda_i} \geq 0.95.
-\end{align*} 
+\end{align} 
 For such a $k$, one might say that the first $k$ principal components capture
 $95\%$ of the total variability.
 
-\textbf{So then do the rest of the principal components not matter?}
+\begin{quest}\label{quest:small-PC}
+	Are the principal components $k+1$ through $m$ useless? 
+\end{quest}
 
 \subsection{Projections}
 
-The answer to the previous question is essentially ``No'', and it can be helpful
-to consider an idealised example. Suppose $k < m$ and 
+The answer to \Cref{quest:small-PC} is essentially ``Yes'', and it can be
+helpful to consider an idealised example. 
+
+Recall that $X$ is our $m\times n$ matrix whose columns are our $n$ data points
+in $\R^m$. The matrix $P$ is obtained from the eigenvectors of $C_X$, which are
+the rows of $P$, and $Y=PX$. Moreover, $P$ is an orthogonal matrix. Suppose $k <
+m$ and 
 \[ 
 	\lambda_{k+1} = \lambda_{k+2} = \cdots = \lambda_m = 0. 
 \]
+Therefore, we have 
+\[ 
+	C_Y = \begin{pmatrix} 
+		\lambda_1 & & & & & \\
+		& \ddots & & & \\
+		& & \lambda_k & & & \\
+		& & & 0 & & \\
+		& & & & \ddots & \\
+		& & & & & 0
+	\end{pmatrix} .
+\] 
+
+\begin{remark}\label{rem:tail-zeroes}
+	In this situation, $y_{rj}=0$ for all $k+1 \leq r \leq m$ and all $1\leq j
+	\leq n$. (Can you show this?!) In other words, the ``new'' data point $y_j$
+	has a tail of zeroes. 
+\end{remark}
+
+\begin{lem}\label{lem:projection}
+	Let $Q$ be the first $k$ rows of $P$, so that $Q$ is $k\times m$. Then for
+	all columns $x_i,x_j\in\R^m$ of $X$, 
+	\[ 
+		d_{\R^m}(x_i, x_j) = d_{\R^k}(Qx_i, Qx_j).
+	\] 
+\end{lem}
+
+\begin{proof} 
+	For each column $x_i$ of $X$, we have $Px_i = y_i$, where $y_i$ is the $i$th
+	column of $Y$. Since $P$ is orthogonal, $d_{\R^m}(Px_i, Px_j)= d_{\R^m}(x_i,
+	x_j)$. Thus, by \Cref{rem:tail-zeroes}
+	\begin{align*}
+		d_{\R^m}(Px_i, Px_j)^2 &= d_{\R^m}(y_i, y_j)^2 \\
+		&= \sum_{r=1}^m (y_{ri} - y_{rj})^2 \\
+		&= \sum_{r=1}^k (y_{ri} - y_{rj})^2 \\ 
+		&= d_{\R^k}(Qx_i, Qx_j)^2. \qedhere
+	\end{align*}
+\end{proof}
+
+The key application of \Cref{lem:projection} is that ignoring rows $k+1$ through
+$m$ in the matrix $P$ does not change the geometry! That is, we can project the
+data to a smaller dimension and distances between the data points remain
+unchanged! 
+
+In practice the $\lambda_i$ are strictly greater than $0$, so this idealised
+situation does not occur. Using our rule in \Cref{eqn:k-rule}, then the
+projected data would approximate the original geometry quite well. The larger
+the ratio, the better the approximation, so there is indeed a trade off. Thus,
+after constructing all of the principal components, one can take the first $k$,
+and project the original data (i.e.\ the matrix $X$) into a smaller dimension by
+constructing the matrix $Q$ from the first $k$ rows of $P$. 
+
+\subsection{PCA is always possible---Spectral theorem}
+
+The real power of PCA is that we can \textit{always} perform it. One does not
+need to input parameters; just the data. Note there is a pre-processing stage of
+normalising and rescaling, but this can be applied to all data. We address
+\Cref{quest:PCA-possible} which, at the time, we just assumed was true. In order
+to do this, we prove the Spectral Theorem.
+
+\begin{thm}[Spectral Theorem]
+
+\end{thm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
