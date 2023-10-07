@@ -1125,7 +1125,7 @@ necessarily hold for a particular data set.
 	sample mean is $0$. What is $C_{X'}$ in terms of $X$ and $\overline{x}$?
 \end{enumerate}
 
-\subsection{Performing PCA}
+\subsection{Performing PCA}\label{sec:perform-pca}
 
 At the heart of performing PCA in practice is the following question. Recall
 that $C_Y$ is a diagonal matrix; see the discussion around \Cref{eqn:cov-Y}.
@@ -1293,7 +1293,7 @@ after constructing all of the principal components, one can take the first $k$,
 and project the original data (i.e.\ the matrix $X$) into a smaller dimension by
 constructing the matrix $Q$ from the first $k$ rows of $P$. 
 
-\subsection{PCA is always possible---Spectral theorem}
+\subsection{PCA is always possible---the Spectral Theorem}
 
 The real power of PCA is that we can \textit{always} perform it. One does not
 need to input parameters; just the data. Note there is a pre-processing stage of
@@ -1301,10 +1301,74 @@ normalising and rescaling, but this can be applied to all data. We address
 \Cref{quest:PCA-possible} which, at the time, we just assumed was true. In order
 to do this, we prove the Spectral Theorem.
 
-\begin{thm}[Spectral Theorem]
-
+\begin{thm}[Spectral Theorem]\label{thm:spectral-thm}
+	Let $M$ be a real symmetric $n\times n$ matrix. Then $\R^n$ has an
+	orthonormal basis coming from eigenvectors of $M$. 
 \end{thm}
 
+\begin{cor}
+	Every eigenvalue and eigenvector of a real symmetric matrix are real.
+\end{cor}
+
+In particular, the~\nameref{thm:spectral-thm} makes principal component analysis
+possible since the covariance matrix is always a real symmetric matrix. 
+
+\begin{remark}
+	Covariance matrices are examples of \textit{positive semi-definite
+	matrices}, which are real matrices whose eigenvalues are all real and
+	nonnegative. We will not need this much, nor will we prove this, but it
+	might be useful to know that covariance matrices are particularly nice.
+\end{remark}
+
+Let's unpack what the \nameref{thm:spectral-thm} says exactly. Recall that an
+orthonormal basis $\{b_1, \dots, b_n\}$ for a vector space $V$ satisfies 
+\begin{align*}
+	b_i \cdot b_j &= \begin{cases}
+		1 & i = j, \\ 0 & i \neq j. 
+	\end{cases}
+\end{align*}
+There are two components to being an orthonormal basis: the basis vectors are
+pairwise orthogonal and each basis vector has unit length. The latter condition
+is not so particularly important (though useful); really, the magic is in the
+pairwise orthogonal condition. 
+
+We already saw in \Cref{sec:perform-pca} that the \nameref{thm:spectral-thm}
+does not hold if we drop `symmetric'. Now we will build our way to prove the
+\nameref{thm:spectral-thm}. 
+
+\begin{lem}\label{lem:distinct-ortho}
+	Let $M$ be a real symmetric matrix. Then eigenvectors corresponding to
+	distinct eigenvalues are orthogonal. 
+\end{lem}
+
+\begin{proof}
+	Let $u$ and $v$ be eigenvectors of $M$ corresponding to $\lambda$ and $\mu$
+	with $\lambda\neq \mu$. Then 
+	\begin{align*}
+		\mu u^{\tr} v = u^{\tr}(M v) = (u^{\tr}M)v = (Mu)^{\tr}v = \lambda u^{\tr}v. 
+	\end{align*}
+	Suppose via contradiction that $u^{\tr} v \neq 0$, but then $\mu=\lambda$,
+	which is a contradiction, so we must have $u^{\tr} v = 0$. Hence, $u$ and
+	$v$ are orthogonal.
+\end{proof}
+
+From \Cref{lem:distinct-ortho}, we can already prove that all eigenvalues (and
+therefore) all eigenvectors are real. Before we dive into that proof, recall the
+operation of \textit{complex conjugation}. If $a,b\in \R$, then $a + bi$ is a
+complex number, and the complex conjugate is 
+\[ 
+	\overline{a + bi} = a - bi.
+\] 
+If $z\in \C$, then $\overline{z} = z$ if and only if $z\in \R$.
+
+\begin{prop}
+	Let $M$ be a real symmetric matrix. Then all eigenvalues of $M$ are real.
+\end{prop}
+
+\begin{proof}
+	Suppose $Mv = \lambda v$, and assume, via contradiction, that
+	$\lambda\in\C\setminus \R$.
+\end{proof}
 
 
 
@@ -1315,6 +1379,64 @@ to do this, we prove the Spectral Theorem.
 
 
 
+
+
+
+
+
+\section{Cluster analysis}
+
+Clustering or cluster analysis is a generic term for algorithms designed to
+partition a given data into clusters. Clusters is a word that does not really
+have a precise meaning, and its meaning might even depend on situation, but
+generally we intuitively understand that clusters are groups of data points as
+seen in \Cref{fig:clusters}.
+
+\begin{figure}
+	\centering 
+	\begin{tikzpicture}
+		% Cluster 1
+		\foreach \x/\y in {1.2/2.3, 1.5/1.8, 2.0/2.5, 1.8/2.0, 2.5/2.7}
+			\fill[orange] (\x, \y) circle (2pt);
+		
+		% Cluster 2
+		\foreach \x/\y in {3.5/4.0, 3.7/3.8, 4.0/4.5, 4.2/4.2, 3.8/4.8}
+			\fill[blue] (\x, \y) circle (2pt);
+		
+		% Cluster 3
+		\foreach \x/\y in {6.0/5.5, 5.5/5.0, 6.2/5.8, 5.8/6.2, 6.5/6.0}
+			\fill[purple] (\x, \y) circle (2pt);
+
+		% Cluster 4
+		\foreach \x/\y in {7.0/3.5, 8.0/3.0, 7.5/4.0, 7.8/4.2, 8.2/3.8}
+			\fill[teal] (\x, \y) circle (2pt);
+		
+		% Axis
+		\draw[->] (0,0) -- (9,0) node[right] {$x$};
+		\draw[->] (0,0) -- (0,7) node[above] {$y$};
+	\end{tikzpicture}
+	\caption{Data points in $\R^2$ that form four clusters.}
+	\label{fig:clusters}
+\end{figure}
+
+There is no one clustering algorithm that is optimal in every situation; in
+fact, because data can cluster in many different ways, one needs a whole
+clustering toolkit. We will talk about two common methods for clustering:
+\textit{$k$-means} and \textit{single linkage} clustering. At the core of both
+of these clustering algorithms is a different assumption on the definition of a
+cluster. 
+
+
+\subsection{$k$-means clustering}
+
+
+
+
+
+
+
+
+\subsection{Single-linkage clustering}
 
 
 
