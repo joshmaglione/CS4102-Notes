@@ -1361,16 +1361,32 @@ complex number, and the complex conjugate is
 \] 
 If $z\in \C$, then $\overline{z} = z$ if and only if $z\in \R$.
 
-\begin{prop}
+\begin{prop}\label{prop:real-evals}
 	Let $M$ be a real symmetric matrix. Then all eigenvalues of $M$ are real.
 \end{prop}
 
 \begin{proof}
 	Suppose $Mv = \lambda v$, and assume, via contradiction, that
-	$\lambda\in\C\setminus \R$.
+	$\lambda\in\C\setminus \R$. If we apply complex conjugation to $Mv = \lambda
+	v$, we have $\overline{M}\overline{v} = \overline{\lambda}\overline{v}$.
+	Since $M$ is a real matrix, $\overline{M}=M$. Thus, we have a new
+	eigenvector and eigenvalue of $M$ since 
+	\[ 
+		M \overline{v} = \overline{\lambda} \overline{v}. 
+	\] 
+	The dot product of $v$ and $\overline{v}$ is a sum of squares: suppose $M$
+	is written with respect to some basis $\{b_1, \dots, b_n\}$; then 
+	\begin{align*}
+		v \cdot \overline{v} &= \sum_{i=1}^n v_i\overline{v}_i > 0.
+	\end{align*}
+	Thus, $v$ and $\overline{v}$ are not orthogonal, but $\lambda\neq
+	\overline{\lambda}$, so we get a contradiction thanks to
+	\Cref{lem:distinct-ortho}. Therefore, $\lambda\in\R$, and hence all
+	eigenvalues of $M$ are real. 
 \end{proof}
 
-
+It follows from \Cref{prop:real-evals} that all eigenvectors of a real symmetric
+matrix are real. 
 
 
 
