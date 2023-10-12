@@ -1375,9 +1375,9 @@ If $z\in \C$, then $\overline{z} = z$ if and only if $z\in \R$.
 		M \overline{v} = \overline{\lambda} \overline{v}. 
 	\] 
 	The dot product of $v$ and $\overline{v}$ is a sum of squares: suppose $M$
-	is written with respect to some basis $\{b_1, \dots, b_n\}$; then 
+	is written with respect to some basis $\{b_1, \dots, b_m\}$; then 
 	\begin{align*}
-		v \cdot \overline{v} &= \sum_{i=1}^n v_i\overline{v}_i > 0.
+		v \cdot \overline{v} &= \sum_{i=1}^m v_i\overline{v}_i > 0.
 	\end{align*}
 	Thus, $v$ and $\overline{v}$ are not orthogonal, but $\lambda\neq
 	\overline{\lambda}$, so we get a contradiction thanks to
@@ -1386,18 +1386,47 @@ If $z\in \C$, then $\overline{z} = z$ if and only if $z\in \R$.
 \end{proof}
 
 It follows from \Cref{prop:real-evals} that all eigenvectors of a real symmetric
-matrix are real. 
+matrix are real, but we still want more---namely orthogonality.
 
+\begin{defn}
+	Let $M$ be an $n\times n$ matrix with entries in a field $K$. A subspace $U$
+	of $K^n$ is \textbf{$M$-invariant} if $Mu\in U$ for all $u\in U$.
+\end{defn}
 
+\begin{defn}
+	Let $U$ be a subspace of a vector space $V$. Define $U^{\perp}$, sometimes
+	called the \textbf{perp-space} (or orthogonal space) of $U$, to be the set
+	of all $v\in V$ such that $v\cdot u = 0$ for all $u\in U$.
+\end{defn}
 
+One thing to try on your own: Show that $U^{\perp}$ is a subspace of $V$ if $U$
+is a subspace of $V$. 
 
+\begin{lem}
+	Let $M$ be an $n\times n$ real symmetric matrix. If $U$ is an $M$-invariant
+	subspace of $\R^n$, then $U^{\perp}$ is $M$-invariant.
+\end{lem}
 
+\begin{proof}
+	Exercise.
+\end{proof}
 
+\begin{lem}
+	Let $M$ be an $n\times n$ real symmetric matrix. If $U$ is a nonzero
+	$M$-invariant subspace of $\R^n$, then $U$ contains an eigenvector of $M$.
+\end{lem}
 
-
-
-
-
+\begin{proof}
+	Let $Q$ be a matrix whose columns define an orthonormal basis for $U$, and
+	assume $U$ is $m$-dimensional. Thus, $Q^{\tr}Q = I_m$. Since $U$ is
+	$M$-invariant, each basis vector is mapped to some linear combination of all
+	of the basis vectors. Therefore, there exists an $m\times m$ real matrix $N$
+	such that 
+	\begin{align*}
+		MQ = QN. 
+	\end{align*}
+	Since $QQ^{\tr} = I_m$, we have $Q^{\tr}MQ = N$. Hence, $N$ is symmetric.
+\end{proof}
 
 
 \section{Cluster analysis}
