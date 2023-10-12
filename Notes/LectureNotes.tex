@@ -1402,7 +1402,7 @@ matrix are real, but we still want more---namely orthogonality.
 One thing to try on your own: Show that $U^{\perp}$ is a subspace of $V$ if $U$
 is a subspace of $V$. 
 
-\begin{lem}
+\begin{lem}\label{lem:perp-inv}
 	Let $M$ be an $n\times n$ real symmetric matrix. If $U$ is an $M$-invariant
 	subspace of $\R^n$, then $U^{\perp}$ is $M$-invariant.
 \end{lem}
@@ -1411,7 +1411,7 @@ is a subspace of $V$.
 	Exercise.
 \end{proof}
 
-\begin{lem}
+\begin{lem}\label{lem:eigenvector}
 	Let $M$ be an $n\times n$ real symmetric matrix. If $U$ is a nonzero
 	$M$-invariant subspace of $\R^n$, then $U$ contains an eigenvector of $M$.
 \end{lem}
@@ -1425,7 +1425,29 @@ is a subspace of $V$.
 	\begin{align*}
 		MQ = QN. 
 	\end{align*}
-	Since $QQ^{\tr} = I_m$, we have $Q^{\tr}MQ = N$. Hence, $N$ is symmetric.
+	Since $QQ^{\tr} = I_m$, we have $Q^{\tr}MQ = N$. Because $M$ is symmetric,
+	so is $N$. By \Cref{prop:real-evals}, all the eigenvalues of $N$ are real,
+	and since $m\geq 1$, let $0\neq v\in\R^m$ such that $Nv=\lambda v$ for some
+	$\lambda\in \R$. Hence, 
+	\[ 
+		MQv = QNv = \lambda Qv.
+	\] 
+	Since the columns of $Q$ are linearly independent, $Qv\neq 0$ and is,
+	therefore, an eigenvector of $M$. But $Qv\in U$, so $U$ contains an
+	eigenvector of $M$.
+\end{proof}
+
+\begin{proof}[Proof of the \nameref{thm:spectral-thm}]
+	We will prove this by induction on $n$. For $n=1$, there is nothing to
+	prove, so we assume that the statement of the theorem holds for $n$. We will
+	show that it holds for $n+1$.
+
+	Let $v$ be an eigenvector of $M$, which is real by \Cref{prop:real-evals}.
+	Let $U$ be the subspace of $\R^{n+1}$ that is orthogonal to $v$, so $\dim(U)
+	= n$. Since the span of $v$ is $M$-invariant, so is $U$ by
+	\Cref{lem:perp-inv}. By \Cref{lem:eigenvector}, $U$ contains a real
+	eigenvector of $M$. By iterating this argument, $U$ contains all other
+	eigenvectors of $M$. Hence, by induction, the statement holds. 
 \end{proof}
 
 
