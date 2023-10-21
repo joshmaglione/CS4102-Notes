@@ -26,6 +26,9 @@
 \usepackage{amsrefs}
 \usepackage{bbm}
 \usepackage{csquotes}
+\usepackage{wrapfig}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \numberwithin{equation}{section}
 \numberwithin{figure}{section}
@@ -54,6 +57,9 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\tr}{\mathrm{t}}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
 
 \setcounter{tocdepth}{2}
 
@@ -1508,9 +1514,10 @@ sequences of genes for breast cancer in \Cref{fig:clustering-genes}.
 \end{figure}
 
 Clustering is also one of the first steps in machine learning---an example of
-unsupervised learning. Sometimes data are put into clusters, and then nearly all
-of the data, except for the cluster ID is discarded, which can save significant
-space in the analysis stage. To quote Google \cite{Google}:
+unsupervised learning. This just means that the machine ``learns'' of patterns
+and structures from the unlabeled data. Sometimes data are put into clusters,
+and then nearly all of the data, except for the cluster ID is discarded, which
+can save significant space in the analysis stage. To quote Google \cite{Google}:
 
 \begin{displayquote}
 	At Google, clustering is used for generalization, data compression, and
@@ -1525,14 +1532,85 @@ clustering toolkit. We will talk about two common methods for clustering:
 of these clustering algorithms is a different assumption on the definition of a
 cluster. 
 
-
 \subsection{$k$-means clustering}
 
+The idea around $k$-means clustering is incredibly simple: group the data into
+$k$ clusters based on the shortest distance to the center of the cluster. From
+this, we see how ``cluster'' is interpreted in the $k$-means algorithm---a
+cluster forms a ``cell'' in Euclidean space and data points outside of this cell
+are outside of the cluster. The shape of these cells depend on the layout of the
+centers of the clusters. 
 
+Before we go through the algorithm for $k$-means clustering, let's explore some
+of the many applications of this algorithm. 
 
+\subsubsection{Image compression}
 
+Suppose we have a \texttt{jpg} file that is $m\times n$ pixels. We can turn this
+image file into a $3$-dimensional array, namely an $m\times n\times 3$ array.
+Alternatively, we can interpret this as three $m\times n$ matrices corresponding
+to the red, green, and blue values of the image. 
 
+\begin{wrapfigure}{r}{6cm}
+	\centering
+	\includegraphics[scale=0.20]{graphics/Sherlock.jpg}
+	\caption{Sherlock.}
+	\label{fig:sherlock}
+\end{wrapfigure}
+We can use $k$-means clustering by interpreting each pixel as a data point in
+$\R^3$ and determining clusters. Once we find our clusters, we can replace all
+the pixels with the center it is closest to. The impact is that we replace all
+the different colours with exactly $k$ colours---essentially compressing the
+image. 
 
+Let's see how this might look on one of my photos. Meet my dog, Sherlock; he is
+depicted in \Cref{fig:sherlock}. There is not very many colours in the image, so
+we should expect that low values of $k$ will produce an image that looks fairly
+similar. Running a $k$-means clustering for each $k\in \{2,\dots, 10\}$ yields
+nine different images seen in \Cref{fig:k-means-sherlock}.
+
+\begin{figure}[h]
+	\centering
+	% \vspace{-2em}
+	\includegraphics[scale=0.6]{graphics/k_means_Sherlocks.jpg}
+	\caption{$k$-means clustering on the image in \Cref{fig:sherlock}.}
+	\label{fig:k-means-sherlock}
+\end{figure}
+
+\subsubsection{The $k$-means algorithm}
+
+There are many versions of the basic algorithm we will describe. We use
+pseudo-code to give the details of the algorithm; this is a way of giving the
+idea of the structure of the code without diving into the specifics of any
+particular language. 
+
+We provide pseudo-code for a basic $k$-means algorithm in \Cref{alg:k-means}.
+The algorithm returns a function $\Lambda : \{1,\dots, n\} \to \{1,\dots, k\}$,
+which can be interpreted as a label for the $n$ data points. The algorithm
+accomplishes this by randomly choosing the $k$ centroids, and then clustering
+the data points accordingly. Once all the data points have been labeled, we
+recompute the centroids by taking the mean point of all the data points in a
+given cluster to be the new centroid. 
+
+\begin{algorithm}
+	\caption{(Basic) $k$-means}\label{alg:k-means}
+	\begin{algorithmic}[1]
+		\Require a positive integer $k$ and $n$ data points $x_i\in\R^m$,
+		\Ensure a map $\Lambda : \{1,\dots,n\} \to \{1,\dots, k\}$.
+		\State Randomly assign the $k$ centroids $c_i$ to $k$ data points.
+		\State Let $\Lambda_0$ and $\Lambda$ be constant functions mapping to $-1$ and $0$, respectively.
+		\While{$\Lambda_0 \neq \Lambda$}
+			\State Set $\Lambda_0 = \Lambda$.
+			\For{$i\in \{1,\dots,n\}$}
+				\State Set $\Lambda(i) = j$ if $\|x_i-c_j\| = \min\{\|x_i-c_r\| : 1\leq r \leq k\}$.
+			\EndFor
+			\For{$i\in \{1,\dots, k\}$}
+				\State Set $c_i = \left(\sum_{j \in \Lambda^{-1}(i)} x_j\middle) \right/ \# \left(\Lambda^{-1}(i)\right)$.
+			\EndFor
+		\EndWhile
+		\State \Return $\Lambda$.
+	\end{algorithmic}
+\end{algorithm}
 
 
 \subsection{Single-linkage clustering}
