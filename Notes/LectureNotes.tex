@@ -1612,11 +1612,33 @@ given cluster to be the new centroid.
 	\end{algorithmic}
 \end{algorithm}
 
+In the first step of $k$-means (see line 1 in \Cref{alg:k-means}), we randomly
+assign the $k$ centroids. For different initial assignments, one can get
+different outputs. This is like trying to find global extrema on a ``bumpy''
+graph by starting at a random point on the graph and then looking for the
+nearest local extrema. There are a number of ways to improve the $k$-means
+algorithm, we will not cover them, but many consider different variations for
+their specific data at hand. 
 
 \subsection{Single-linkage clustering}
 
+Single-linkage clustering is, in some sense, the opposite approach to clustering
+than $k$-means. Single-linkage or more generally \emph{nearest neighbour}
+clustering a hierarchical clustering algorithm. With $k$-means, we need to know
+$k$, the number of clusters, in order to run the algorithm. With nearest
+neighbour, we look at all the possible clusterings under prescribed conditions
+by means of a \emph{dendrogram}. We have already seen an example of the output
+of a hierarchical clustering algorithm; see \Cref{fig:clustering-genes}.
 
+The basic idea of nearest neighbour clustering is that every data point is its
+own cluster and under certain conditions, two clusters are merged at each step
+until all points are in one cluster. The output is not a specific clustering of
+the data, but rather all the possible clusterings. This is communicated through
+a dendrogram. 
 
+Before we look at the algorithm, let's consider a specific application.
+
+\subsubsection{Clustering DNA sequences}
 
 
 
