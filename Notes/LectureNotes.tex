@@ -29,6 +29,7 @@
 \usepackage{wrapfig}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{mathrsfs}
 
 \numberwithin{equation}{section}
 \numberwithin{figure}{section}
@@ -1623,14 +1624,14 @@ their specific data at hand.
 \subsection{Single-linkage clustering}
 
 Single-linkage clustering is, in some sense, the opposite approach to clustering
-than $k$-means. Single-linkage or more generally \emph{nearest neighbour}
-clustering a hierarchical clustering algorithm. With $k$-means, we need to know
-$k$, the number of clusters, in order to run the algorithm. With nearest
-neighbour, we look at all the possible clusterings under prescribed conditions
-by means of a \emph{dendrogram}. We have already seen an example of the output
-of a hierarchical clustering algorithm; see \Cref{fig:clustering-genes}.
+than $k$-means. Single-linkage or more generally \emph{neighbour joining}
+clustering is a hierarchical clustering algorithm. With $k$-means, we need to
+know $k$, the number of clusters, in order to run the algorithm. With neighbour
+joining, we look at all the possible clusterings under prescribed conditions by
+means of a \emph{dendrogram}. We have already seen an example of the output of a
+hierarchical clustering algorithm; see \Cref{fig:clustering-genes}.
 
-The basic idea of nearest neighbour clustering is that every data point is its
+The basic idea of neighbour joining clustering is that every data point is its
 own cluster and under certain conditions, two clusters are merged at each step
 until all points are in one cluster. The output is not a specific clustering of
 the data, but rather all the possible clusterings. This is communicated through
@@ -1638,25 +1639,71 @@ a dendrogram.
 
 Before we look at the algorithm, let's consider a specific application.
 
-\subsubsection{Clustering DNA sequences}
+\subsubsection{Clustering breast cancer tumors}
 
+We will look at the study in~\cite{BreastCancer} a little closely; see also
+\Cref{fig:clustering-genes}. People diagnosed with breast cancer can have very
+different clinical outcomes. We do not really know why this is the case, but one
+suggestion might be that our knowledge of the specific breast cancer tumors is
+lacking. Sotiriou et al.~\cite{BreastCancer} propose clustering the tumors by
+gene expression profiles, via unsupervised hierarchical clustering. 
 
+Prior to their work, the tumors could be partitioned into two major subgroups
+based on their estrogen receptors. Using clustering methods, Sotiriou et al.
+were able to obtain this partition at the top of the dendrogram---if one cuts it
+so there are exactly two clusters, these align with the two subgroups based on
+estrogen receptors. They were able to further partition the two subgroups based
+on their basal and luminal characteristics. This led to the six clusters
+(represented by different colours) in \Cref{fig:clustering-genes}. This is also
+in line with previous work done by different research teams, and offers more
+evidence that their hypothesis is correct---that breast cancer tumors ought to
+be clustered in the established way.
 
+\subsubsection{The neighbour joining algorithm}
 
+We will describe a class of \emph{agglomerative} algorithms that can be altered
+to produce different outcomes based on certain given conditions. In order to do
+this, one of the inputs is a distance function, also known as a \emph{metric}.
+We want the metric to be defined on finite subsets of $\R^m$, which will be
+interpreted as clusters in the actual algorithm. 
 
+\begin{defn}
+	A function $d: \mathscr{M}\times \mathscr{M} \to \R$ on a set $\mathscr{M}$
+	is a \emph{metric} if 
+	\begin{enumerate}
+		\item for all $X, Y\in \mathscr{M}$, we have $d(X, Y) \geq 0$, where
+		equality holds if and only if $X=Y$,
+		\item for all $X, Y\in\mathscr{M}$, we have $d(X, Y) = d(Y, X)$, and
+		\item for all $X, Y, Z\in\mathscr{M}$, we have 
+		\[ 
+			d(X, Y) + d(Y, Z) \geq d(X, Z). 
+		\] 
+	\end{enumerate}
+\end{defn}
 
+Let's write $\mathscr{F}_m$ for the set of finite subsets of $\R^m$, so we will
+describe a few metrics on $\mathscr{F}_m$.
+\begin{description}
+	\item[Single-linkage:] For $C_1,C_2\in\mathscr{F}_m$, 
+	\begin{align*}
+		d(C_1, C_2) &= \min\left\{ \| x - y\| : x\in C_1, y\in C_2 \right\}. 
+	\end{align*}
+	\item[Complete-linkage:] For $C_1,C_2\in\mathscr{F}_m$, 
+	\begin{align*}
+		d(C_1, C_2) &= \max\left\{ \| x - y\| : x\in C_1, y\in C_2 \right\}. 
+	\end{align*}
+	\item[Average-linkage:] For $C_1,C_2\in\mathscr{F}_m$, 
+	\begin{align*}
+		d(C_1, C_2) &= \dfrac{1}{\# C_1 \cdot \# C_2} \sum_{\substack{x \in C_1 \\ y\in C_2}} \|x - y\|. 
+	\end{align*}
+\end{description}
+There are of course other metrics. Single-linkage clustering, or nearest
+neighbour, corresponds to neighbour joining with the single-linkage metric.
+Likewise, Complete-linkage clustering, or farthest neighbour, corresponds to
+neighbour joining with the complete-linkage metric. One could design a metric
+that might be most relevant for the particular data set at hand.
 
-
-
-
-
-
-
-
-
-
-
-
+Again we will describe the algorithm using pseudo-code. 
 
 
 
