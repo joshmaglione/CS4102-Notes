@@ -1663,9 +1663,9 @@ be clustered in the established way.
 
 We will describe a class of \emph{agglomerative} algorithms that can be altered
 to produce different outcomes based on certain given conditions. In order to do
-this, one of the inputs is a distance function, also known as a \emph{metric}.
-We want the metric to be defined on finite subsets of $\R^m$, which will be
-interpreted as clusters in the actual algorithm. 
+this, one of the inputs is a distance function, which can be obtained from a
+\emph{metric}. We want the metric to be defined on finite subsets of $\R^m$,
+which will be interpreted as clusters in the actual algorithm. 
 
 \begin{defn}
 	A function $d: \mathscr{M}\times \mathscr{M} \to \R$ on a set $\mathscr{M}$
@@ -1674,15 +1674,38 @@ interpreted as clusters in the actual algorithm.
 		\item for all $X, Y\in \mathscr{M}$, we have $d(X, Y) \geq 0$, where
 		equality holds if and only if $X=Y$,
 		\item for all $X, Y\in\mathscr{M}$, we have $d(X, Y) = d(Y, X)$, and
-		\item for all $X, Y, Z\in\mathscr{M}$, we have 
+		\item for all $X, Y, Z\in\mathscr{M}$, the triangle inequality is
+		satisfied:
 		\[ 
 			d(X, Y) + d(Y, Z) \geq d(X, Z). 
 		\] 
 	\end{enumerate}
+	Functions satisfying (1) and (2) are called \emph{semimetrics}. 
 \end{defn}
 
+\begin{lem}\label{lem:semimetrics}
+	The Euclidean distance $d(x,y) = \|x-y\|$ is a metric on $\R^m$. The square
+	of the Euclidean distance, $d_{\square}(x,y)=\|x-y\|^2$, is not a metric but
+	a semimetric.
+\end{lem}
+
+\begin{proof}
+	To show that $d_{\square}$ does not satisfy the triangle inequality, let
+	$a\in\R$ be positive. Then $|-a|^2 + |a|^2 < |2a|^2$, so
+	\begin{align*}
+		d_{\square}(a,0) + d_{\square}(-a,0) &< d_{\square}(a,-a). \qedhere
+	\end{align*}
+\end{proof}
+
+In the context of clustering, having a metric is not necessary. For example,
+because $x\mapsto x^2$ is monotonically increasing on the $\R_{\geq 0}$, it
+follows that $d(x,y) < d(u,v)$ if and only if $d_{\square}(x,y) <
+d_{\square}(u,v)$; here we are using the notation from \Cref{lem:semimetrics}.
+Thus, it is irrelevant if we cluster two points based on $d$ or $d_{\square}$,
+so we allow our distance functions to come from semimetrics. 
+
 Let's write $\mathscr{F}_m$ for the set of finite subsets of $\R^m$, so we will
-describe a few metrics on $\mathscr{F}_m$.
+describe a few distance functions on $\mathscr{F}_m$.
 \begin{description}
 	\item[Single-linkage:] For $C_1,C_2\in\mathscr{F}_m$, 
 	\begin{align*}
@@ -1694,17 +1717,46 @@ describe a few metrics on $\mathscr{F}_m$.
 	\end{align*}
 	\item[Average-linkage:] For $C_1,C_2\in\mathscr{F}_m$, 
 	\begin{align*}
-		d(C_1, C_2) &= \dfrac{1}{\# C_1 \cdot \# C_2} \sum_{\substack{x \in C_1 \\ y\in C_2}} \|x - y\|. 
+		d(C_1, C_2) &= \dfrac{1}{\# C_1 \cdot \# C_2} \sum_{x \in C_1} \sum_{y\in C_2} \|x - y\|. 
 	\end{align*}
 \end{description}
-There are of course other metrics. Single-linkage clustering, or nearest
-neighbour, corresponds to neighbour joining with the single-linkage metric.
-Likewise, Complete-linkage clustering, or farthest neighbour, corresponds to
-neighbour joining with the complete-linkage metric. One could design a metric
-that might be most relevant for the particular data set at hand.
+Technically the single-linkage is not a semimetric: if $C_1\cap C_2\neq
+\varnothing$ yet $C_1\neq C_2$, then $d(C_1, C_2)=0$. However we only consider
+sets $C_1$ and $C_2$ with trivial intersection anyways, so this problem is
+avoided. 
 
-Again we will describe the algorithm using pseudo-code. 
+\begin{lem}
+	The complete-linkage function defines a metric on $\mathscr{F}_m$.
+\end{lem}
 
+There are of course other distances one could use. Single-linkage clustering, or
+nearest neighbour, corresponds to neighbour joining with the single-linkage
+metric. Likewise, complete-linkage clustering, or farthest neighbour,
+corresponds to neighbour joining with the complete-linkage metric. One could
+design a metric that might be most relevant for the particular data set at hand.
+
+The output for a hierarchical clustering algorithm is a \emph{dendrogram} or
+data equivalent to one. \Cref{fig:clustering-genes} contains one example.
+Another very similar example is a phylogenetic tree seen in
+\Cref{fig:phylogenetic}.
+
+\begin{figure}[h]
+	\centering 
+	\includegraphics[scale=0.3]{graphics/Phylogenetic_tree.png}
+	\caption{A phylogenetic tree is equivalent to a dendrogram.}
+	\label{fig:phylogenetic}
+\end{figure}
+
+To read a dendrogram, one first finds the many leaves or ends---often these are
+labeled---these are the initial clusters. As one goes through the dendrogram
+(e.g.\ bottom to top or left to right), clusters get linked, which is depicted
+by joining the ends of the initial clusters. This happens until there is exactly
+one cluster left. Two ends are closer (or more similar) if they become joined
+early on compared to two ends that only become joined near the end of the
+dendrogram. 
+
+Let's explain the algorithm using pseudo-code. Instead of outputting a
+dendrogram, we will output a list of pairs 
 
 
 
