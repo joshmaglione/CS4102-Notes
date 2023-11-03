@@ -15,7 +15,7 @@
 \usepackage[margin=3cm]{geometry}
 \usepackage{mathpazo}
 \usepackage{url}
-\usepackage[labelformat=simple]{subcaption}
+\usepackage{subcaption}
 \usepackage{tikz}
 \usepackage{pgf}
 \usepackage{longtable}
@@ -30,6 +30,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{mathrsfs}
+\usepackage{afterpage}
 
 \numberwithin{equation}{section}
 \numberwithin{figure}{section}
@@ -1573,7 +1574,7 @@ nine different images seen in \Cref{fig:k-means-sherlock}.
 \begin{figure}[h]
 	\centering
 	% \vspace{-2em}
-	\includegraphics[scale=0.6]{graphics/k_means_Sherlocks.jpg}
+	\includegraphics[scale=0.75]{graphics/k_means_Sherlocks.jpg}
 	\caption{$k$-means clustering on the image in \Cref{fig:sherlock}.}
 	\label{fig:k-means-sherlock}
 \end{figure}
@@ -1621,14 +1622,116 @@ nearest local extrema. There are a number of ways to improve the $k$-means
 algorithm, we will not cover them, but many consider different variations for
 their specific data at hand. 
 
-\subsection{Single-linkage clustering}
+\subsubsection{A small example}
 
-Single-linkage clustering is, in some sense, the opposite approach to clustering
-than $k$-means. Single-linkage or more generally \emph{neighbour joining}
-clustering is a hierarchical clustering algorithm. With $k$-means, we need to
-know $k$, the number of clusters, in order to run the algorithm. With neighbour
-joining, we look at all the possible clusterings under prescribed conditions by
-means of a \emph{dendrogram}. We have already seen an example of the output of a
+We will consider 40 points in $\R^2$, which can be seen in \Cref{fig:4-means},
+and we will look for $4$ clusters. You might try to see how you would cluster
+the data. 
+
+\begin{figure}[h]
+	\centering 
+	\includegraphics[scale=0.6]{graphics/k_means_iter-1.png}
+	\caption{The plotted data we will use to run a $4$-means clustering.}
+	\label{fig:4-means}
+\end{figure}
+
+We will randomly select four data points for our initial centroids, and then we
+will group the data points into the four clusters. We will show this by
+colouring the Voronoi cells different colours and indicating the centroids by
+white crosses. All of the iterations of one $k$-means algorithm can be seen in
+\Cref{fig:4-means-iterations}. Just to illustrate how sensitive $k$-means is to
+the initial choice of centroids, we run the algorithm again in
+\Cref{fig:4-means-iterations-alt}.
+
+\afterpage{\clearpage}
+
+\begin{figure}[ht]
+	\centering 
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter0.png}
+		\vspace{-0.75em}
+		\caption{Iteration 0}
+	\end{subfigure}~%
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter1.png}
+		\vspace{-0.75em}
+		\caption{Iteration 1}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter2.png}
+		\vspace{-0.75em}
+		\caption{Iteration 2}
+	\end{subfigure}~%
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter3.png}
+		\vspace{-0.75em}
+		\caption{Iteration 3}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter4.png}
+		\vspace{-0.75em}
+		\caption{Iteration 4}
+	\end{subfigure}~%
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter5.png}
+		\vspace{-0.75em}
+		\caption{Iteration 5}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.66\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter6.png}
+		\vspace{-0.75em}
+		\caption{Iteration 6}
+	\end{subfigure}
+	\caption{Seven iterations of one $k$-means algorithm.}
+	\label{fig:4-means-iterations}
+\end{figure}
+
+\begin{figure}[t]
+	\centering 
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter0_alt.png}
+		\vspace{-0.75em}
+		\caption{Iteration 0}
+	\end{subfigure}~%
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter1_alt.png}
+		\vspace{-0.75em}
+		\caption{Iteration 1}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter2_alt.png}
+		\vspace{-0.75em}
+		\caption{Iteration 2}
+	\end{subfigure}~%
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering 
+		\includegraphics[scale=0.4]{graphics/k_means_iter3_alt.png}
+		\vspace{-0.75em}
+		\caption{Iteration 3}
+	\end{subfigure}
+	\caption{Four iterations of another $k$-means algorithm.}
+	\label{fig:4-means-iterations-alt}
+\end{figure}
+
+\subsection{Hierarchical clustering}
+
+Hierarchical clustering is, in some sense, the opposite approach to clustering
+than $k$-means. We will primarily be working with Single-linkage clustering.
+Single-linkage or, more generally, \emph{neighbour joining} clustering is a
+hierarchical clustering algorithm. With $k$-means, we need to give the number of
+clusters $k$ in order to run the algorithm. With neighbour joining, we look at
+all the possible clusterings under prescribed conditions by means of a
+\emph{dendrogram}. We have already seen an example of the output of a
 hierarchical clustering algorithm; see \Cref{fig:clustering-genes}.
 
 The basic idea of neighbour joining clustering is that every data point is its
@@ -1756,7 +1859,166 @@ early on compared to two ends that only become joined near the end of the
 dendrogram. 
 
 Let's explain the algorithm using pseudo-code. Instead of outputting a
-dendrogram, we will output a list of pairs 
+dendrogram, we will output a list of pairs of the form $(t, [C_1,\dots, C_r])$,
+where $t\geq 0$ and each $C_i$ is a finite set of data points. This list will
+start with $(0, [C_1,\dots, C_n])$, where each $C_i$ is a singleton, and it will
+end with $(t_\infty, [C_1])$, where $C_1$ contains all of the data points. Note
+that this data is also equivalent to a dendrogram.
+
+\begin{algorithm}
+	\caption{Neighbour joining}\label{alg:neighbour}
+	\begin{algorithmic}[1]
+		\Require a semimetric $d : \mathscr{F}_m\times \mathscr{F}_m\to \R$ and $n$ data points $x_i\in\R^m$,
+		\Ensure a list $D$ equivalent to a dendrogram.
+		\State Set $t=0$.
+		\State Set $C = \{\{x_1\}, \dots, \{x_n\}\}$.
+		\State Set $D = [(t, C)]$.
+		\While{$\# C > 1$}
+			\State Construct distance matrix $M = (M_{ij})$, with $M_{ij} = d(C_i, C_j)$.
+			\State Determine the two closest distinct clusters $C_r$ and $C_s$ from $M$.
+			\State Set $t = t + M_{rs}$.
+			\State Set $C = (C \setminus \{C_r, C_s\}) \cup \{C_r \cup C_s\}$.
+			\State Append to $D$ the pair $(t, C)$.
+		\EndWhile
+		\State \Return $D$.
+	\end{algorithmic}
+\end{algorithm}
+
+Let's go through \Cref{alg:neighbour} on a small example. Unlike $k$-means,
+neighbour joining is \emph{deterministic}; that is, it runs the same every time
+on the same input. Notice in \Cref{alg:neighbour} that the actual points $x_i$
+do not matter; instead, it's the distances between the points (and clusters)
+that matter. Thus, we won't specify points but a \emph{graph}.
+
+\begin{defn}
+	A (finite, simple) \textbf{graph} $G$ is a pair of vertices $V = \{v_1,
+	\dots, v_n\}$ and edges $E = \{e_1, \dots, e_k\}$, where each $e_i\subseteq
+	V$ of size exactly two. Vertices $v_i$ and $v_j$ are \textbf{adjacent},
+	written $v_i \sim v_j$, if $\{v_i, v_j\} \in E$.
+\end{defn}
+
+Graphs are ubiquitous in mathematics and computer science, and they can be
+visualised! Three graphs can be seen in \Cref{fig:3-graphs}.
+
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{0.3\textwidth}
+		\centering
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/5 * (\i - 1) + 18}:1) {$v_{\i}$};
+			}
+			\node at (0,-2) {$G_1$};
+			\draw[thick] (node1) -- (node2);
+			\draw[thick] (node4) -- (node5);
+		\end{tikzpicture}
+	\end{minipage}~
+	\begin{minipage}{0.3\textwidth}
+		\centering
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0,-2) {$G_2$};
+			\draw[thick] (node1) -- (node2);
+			\draw[thick] (node1) -- (node3);
+			\draw[thick] (node1) -- (node4);
+			\draw[thick] (node1) -- (node5);
+			\draw[thick] (node1) -- (node6);
+			\draw[thick] (node2) -- (node3);
+			\draw[thick] (node2) -- (node5);
+			\draw[thick] (node4) -- (node5);
+			\draw[thick] (node3) -- (node5);
+		\end{tikzpicture}
+	\end{minipage}~
+	\begin{minipage}{0.3\textwidth}
+		\centering
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/4 * (\i) - 45}:1) {$v_{\i}$};
+			}
+			\node at (0,-2) {$G_3$};
+			\draw[thick] (node1) -- (node2);
+			\draw[thick] (node1) -- (node3);
+			\draw[thick] (node1) -- (node4);
+			\draw[thick] (node2) -- (node3);
+			\draw[thick] (node2) -- (node4);
+			\draw[thick] (node3) -- (node4);
+		\end{tikzpicture}
+	\end{minipage}
+	\caption{Three different graphs.}
+	\label{fig:3-graphs}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
