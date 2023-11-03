@@ -100,7 +100,7 @@ We will consider four key topics:
 \begin{enumerate} 
 	\item Least Squares Fitting,
 	\item Principal Component Analysis,
-	\item Hierarchical Clustering and Persistence,
+	\item $k$-Means and Hierarchical Clustering,
 	\item Nearest Neighbors and the Johnson--Lindenstrauss Theorem
 \end{enumerate}
 
@@ -1460,7 +1460,7 @@ is a subspace of $V$.
 \end{proof}
 
 
-\section{Cluster analysis}
+\section{Clustering}
 
 Similar to PCA, clustering is a way to understand structure of data. Clustering
 or cluster analysis is a generic term for algorithms designed to partition a
@@ -1534,7 +1534,7 @@ clustering toolkit. We will talk about two common methods for clustering:
 of these clustering algorithms is a different assumption on the definition of a
 cluster. 
 
-\subsection{$k$-means clustering}
+\subsection{Introduction to $k$-means clustering}
 
 The idea around $k$-means clustering is incredibly simple: group the data into
 $k$ clusters based on the shortest distance to the center of the cluster. From
@@ -1546,7 +1546,7 @@ centers of the clusters.
 Before we go through the algorithm for $k$-means clustering, let's explore some
 of the many applications of this algorithm. 
 
-\subsubsection{Image compression}
+\subsection{Image compression with $k$-means}
 
 Suppose we have a \texttt{jpg} file that is $m\times n$ pixels. We can turn this
 image file into a $3$-dimensional array, namely an $m\times n\times 3$ array.
@@ -1579,7 +1579,7 @@ nine different images seen in \Cref{fig:k-means-sherlock}.
 	\label{fig:k-means-sherlock}
 \end{figure}
 
-\subsubsection{The $k$-means algorithm}
+\subsection{The $k$-means algorithm}
 
 There are many versions of the basic algorithm we will describe. We use
 pseudo-code to give the details of the algorithm; this is a way of giving the
@@ -1622,7 +1622,7 @@ nearest local extrema. There are a number of ways to improve the $k$-means
 algorithm, we will not cover them, but many consider different variations for
 their specific data at hand. 
 
-\subsubsection{A small example}
+\subsection{A small example with $k$-means}
 
 We will consider 40 points in $\R^2$, which can be seen in \Cref{fig:4-means},
 and we will look for $4$ clusters. You might try to see how you would cluster
@@ -1723,7 +1723,7 @@ the initial choice of centroids, we run the algorithm again in
 	\label{fig:4-means-iterations-alt}
 \end{figure}
 
-\subsection{Hierarchical clustering}
+\subsection{Introduction to hierarchical clustering}
 
 Hierarchical clustering is, in some sense, the opposite approach to clustering
 than $k$-means. We will primarily be working with Single-linkage clustering.
@@ -1742,7 +1742,7 @@ a dendrogram.
 
 Before we look at the algorithm, let's consider a specific application.
 
-\subsubsection{Clustering breast cancer tumors}
+\subsection{An application of hierarchical clustering}
 
 We will look at the study in~\cite{BreastCancer} a little closely; see also
 \Cref{fig:clustering-genes}. People diagnosed with breast cancer can have very
@@ -1762,7 +1762,7 @@ in line with previous work done by different research teams, and offers more
 evidence that their hypothesis is correct---that breast cancer tumors ought to
 be clustered in the established way.
 
-\subsubsection{The neighbour joining algorithm}
+\subsection{The neighbour joining algorithm}
 
 We will describe a class of \emph{agglomerative} algorithms that can be altered
 to produce different outcomes based on certain given conditions. In order to do
@@ -1884,11 +1884,11 @@ that this data is also equivalent to a dendrogram.
 	\end{algorithmic}
 \end{algorithm}
 
-Let's go through \Cref{alg:neighbour} on a small example. Unlike $k$-means,
-neighbour joining is \emph{deterministic}; that is, it runs the same every time
-on the same input. Notice in \Cref{alg:neighbour} that the actual points $x_i$
-do not matter; instead, it's the distances between the points (and clusters)
-that matter. Thus, we won't specify points but a \emph{graph}.
+We will soon go through \Cref{alg:neighbour} on a small example. Unlike
+$k$-means, neighbour joining is \emph{deterministic}; that is, it runs the same
+every time on the same input. Notice in \Cref{alg:neighbour} that the actual
+points $x_i$ do not matter; instead, it's the distances between the points (and
+clusters) that matter. Thus, we won't specify points but a \emph{graph}.
 
 \begin{defn}
 	A (finite, simple) \textbf{graph} $G$ is a pair of vertices $V = \{v_1,
@@ -1898,7 +1898,8 @@ that matter. Thus, we won't specify points but a \emph{graph}.
 \end{defn}
 
 Graphs are ubiquitous in mathematics and computer science, and they can be
-visualised! Three graphs can be seen in \Cref{fig:3-graphs}.
+easily visualised (for a relatively small amount of vertices). Three graphs can
+be seen in \Cref{fig:3-graphs}.
 
 \begin{figure}[h]
 	\centering
@@ -1953,7 +1954,7 @@ visualised! Three graphs can be seen in \Cref{fig:3-graphs}.
 	\label{fig:3-graphs}
 \end{figure}
 
-
+\subsection{A small example of hierarchical clustering}
 
 
 
