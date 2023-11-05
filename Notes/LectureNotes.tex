@@ -1956,16 +1956,218 @@ be seen in \Cref{fig:3-graphs}.
 
 \subsection{A small example of hierarchical clustering}
 
+Instead of writing down or plotting data points, we will write down a distance
+matrix. The distance matrix is a symmetric matrix with zeros along the diagonal.
+(Why?) The $(i,j)$ entry is equal to the distance between vertices (or clusters)
+$v_i$ and $v_j$. Let's consider the following distance matrix.
+\begin{center}
+	\begin{tabular}{c|cccccc}
+		& $v_1$ & $v_2$ & $v_3$ & $v_4$ & $v_5$ & $v_6$ \\ \hline 
+		$v_1$ & 0 & 4 & 8 & 1 & 7 & 8 \\
+		$v_2$ & 4 & 0 & 6 & 5 & 5 & 6 \\
+		$v_3$ & 8 & 6 & 0 & 7 & 2 & 2 \\
+		$v_4$ & 1 & 5 & 7 & 0 & 8 & 8 \\
+		$v_5$ & 7 & 5 & 2 & 8 & 0 & 1 \\
+		$v_6$ & 8 & 6 & 2 & 8 & 1 & 0 
+	\end{tabular}
+\end{center}
+
+We will apply single- and complete-linkages and cluster the data accordingly.
+Because we know how to compute them both given the distances from all pairs of
+vertices, we will not recompute our distance matrix each time. Instead we will
+draw nine graphs labeled $G_t$ for $t\in \{0, \dots, 8\}$ since the maximal
+distance between any two points is $8$. We will include an edge between $v_i$
+and $v_j$ in $G_t$ if and only if $d(v_i, v_j)\leq t$. The graph $G_0$ is the
+graph on 8 vertices with no edges, and the graph $G_8$ is the graph on 8
+vertices where every vertex is adjacent to every other vertex (this is called a
+\emph{complete graph}). All of the graphs are shown in \Cref{fig:9-graphs}.
+
+\begin{figure}[h]
+	\centering 
+	\begin{tikzpicture}
+		\node at (0, 2*4) {
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0, -1.75) {$G_0$};
+		\end{tikzpicture}
+		};
+		\node at (1*4.5, 2*4) {
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0, -1.75) {$G_1$};
+			\draw[ultra thick] (node1) -- (node4);
+			\draw[ultra thick] (node5) -- (node6);
+		\end{tikzpicture}
+		};
+		\node at (2*4.5, 2*4) {
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0, -1.75) {$G_2$};
+			\draw[ultra thick] (node1) -- (node4);
+			\draw[ultra thick] (node5) -- (node6);
+			\draw[ultra thick] (node3) -- (node5);
+			\draw[ultra thick] (node3) -- (node6);
+		\end{tikzpicture}
+		};
+		\node at (0, 1*4) {
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0, -1.75) {$G_3$};
+			\draw[ultra thick] (node1) -- (node4);
+			\draw[ultra thick] (node5) -- (node6);
+			\draw[ultra thick] (node3) -- (node5);
+			\draw[ultra thick] (node3) -- (node6);
+		\end{tikzpicture}
+		};
+		\node at (1*4.5, 1*4) {
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0, -1.75) {$G_4$};
+			\draw[ultra thick] (node1) -- (node4);
+			\draw[ultra thick] (node5) -- (node6);
+			\draw[ultra thick] (node3) -- (node5);
+			\draw[ultra thick] (node3) -- (node6);
+			\draw[ultra thick] (node1) -- (node2);
+		\end{tikzpicture}
+		};
+		\node at (2*4.5, 1*4) {
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0, -1.75) {$G_5$};
+			\draw[ultra thick] (node1) -- (node4);
+			\draw[ultra thick] (node5) -- (node6);
+			\draw[ultra thick] (node3) -- (node5);
+			\draw[ultra thick] (node3) -- (node6);
+			\draw[ultra thick] (node1) -- (node2);
+			\draw[ultra thick] (node2) -- (node4);
+			\draw[ultra thick] (node2) -- (node5);
+		\end{tikzpicture}
+		};
+		\node at (0*4.5, 0) {
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0, -1.75) {$G_6$};
+			\draw[ultra thick] (node1) -- (node4);
+			\draw[ultra thick] (node5) -- (node6);
+			\draw[ultra thick] (node3) -- (node5);
+			\draw[ultra thick] (node3) -- (node6);
+			\draw[ultra thick] (node1) -- (node2);
+			\draw[ultra thick] (node2) -- (node4);
+			\draw[ultra thick] (node2) -- (node5);
+			\draw[ultra thick] (node2) -- (node3);
+			\draw[ultra thick] (node2) -- (node6);
+		\end{tikzpicture}
+		};
+		\node at (1*4.5, 0) {
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0, -1.75) {$G_7$};
+			\draw[ultra thick] (node1) -- (node4);
+			\draw[ultra thick] (node5) -- (node6);
+			\draw[ultra thick] (node3) -- (node5);
+			\draw[ultra thick] (node3) -- (node6);
+			\draw[ultra thick] (node1) -- (node2);
+			\draw[ultra thick] (node2) -- (node4);
+			\draw[ultra thick] (node2) -- (node5);
+			\draw[ultra thick] (node2) -- (node3);
+			\draw[ultra thick] (node2) -- (node6);
+			\draw[ultra thick] (node1) -- (node5);
+			\draw[ultra thick] (node3) -- (node4);
+		\end{tikzpicture}
+		};
+		\node at (2*4.5, 0) {
+		\begin{tikzpicture}
+			% Nodes
+			\foreach \i in {1,2,3,4,5,6} {
+				\node[circle, draw, fill=white, inner sep=1pt, thick] (node\i) at ({360/6 * (\i - 1)}:1) {$v_{\i}$};
+			}
+			\node at (0, -1.75) {$G_8$};
+			\draw[ultra thick] (node1) -- (node4);
+			\draw[ultra thick] (node5) -- (node6);
+			\draw[ultra thick] (node3) -- (node5);
+			\draw[ultra thick] (node3) -- (node6);
+			\draw[ultra thick] (node1) -- (node2);
+			\draw[ultra thick] (node2) -- (node4);
+			\draw[ultra thick] (node2) -- (node5);
+			\draw[ultra thick] (node2) -- (node3);
+			\draw[ultra thick] (node2) -- (node6);
+			\draw[ultra thick] (node1) -- (node5);
+			\draw[ultra thick] (node3) -- (node4);
+			\draw[ultra thick] (node1) -- (node3);
+			\draw[ultra thick] (node1) -- (node6);
+			\draw[ultra thick] (node4) -- (node5);
+			\draw[ultra thick] (node4) -- (node6);
+		\end{tikzpicture}
+		};
+	\end{tikzpicture}
+	\caption{The 9 graphs visualising the possible clustering of the 8 vertices.}
+	\label{fig:9-graphs}
+\end{figure}
 
 
+Now we will produce dendrograms, one for the single-linkage and one for the
+complete-linkage. There are two concepts in Graph Theory that we can use to
+determine these dendrograms. 
 
+\begin{defn}
+	Two vertices $v_i$ and $v_j$ of a graph $G$ are \textbf{connected} if there
+	exists a sequence of adjacent vertices of the form $v_i = v_0 ~ v_1 ~ \cdots
+	~ v_{\ell} = v_j$.
+\end{defn}
 
+\begin{defn}
+	A subset $S$ of vertices of a graph $G$ form a \textbf{clique} if for all
+	distinct $v_i, v_j\in S$, the edge $\{v_i, v_j\}$ is in $G$. 
+\end{defn}
 
+Let's consider the graphs in \Cref{fig:9-graphs} again. Using single-linkage, we
+know that vertices $v_i$ and $v_j$ lie in the same cluster if and only if $v_i$
+and $v_j$ are connected. Therefore, we have exactly one cluster starting at
+$G_5$ using single-linkage. Using complete-linkage, we know that vertices
+$\{v_{i_1}, \dots, v_{i_{\ell}}\}$ form a cluster if and only if they form a
+clique. Hence, we have exactly one cluster starting at $G_8$ using
+complete-linkage. The dendrograms can be seen in
+\Cref{fig:dendrogram-slink,,fig:dendrogram-clink}. 
 
+\afterpage{\clearpage}
 
+\begin{figure}[h]
+	\centering 
+	\includegraphics[scale=0.75]{graphics/slink.png}
+	\caption{The dendrogram corresponding to the graphs in \Cref{fig:9-graphs} using single-linkage.}
+	\label{fig:dendrogram-slink}	
+\end{figure}
 
-
-
+\begin{figure}[h]
+	\centering 
+	\includegraphics[scale=0.75]{graphics/clink.png}
+	\caption{The dendrogram corresponding to the graphs in \Cref{fig:9-graphs} using complete-linkage.}
+	\label{fig:dendrogram-clink}	
+\end{figure}
 
 
 
