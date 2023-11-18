@@ -96,7 +96,7 @@ of data analysis more easily.
 
 \bigskip
 
-We will consider four key topics:
+\noindent We will consider four key topics:
 \begin{enumerate} 
 	\item Least Squares Fitting,
 	\item Principal Component Analysis,
@@ -2171,22 +2171,99 @@ complete-linkage. The dendrograms can be seen in
 
 
 
+% % In case I need more content to cover.
+
+% \section{$k$-Nearest neighbours}
+
+% Let's start by considering two different scenarios. 
+
+% Suppose we have one million images of cats of various breeds, in different
+% positions, and in different lighting conditions. Then we are given a new
+% picture, and we are asked to determine if it is a picture of a cat and if so
+% what breed it is or what it is doing in the picture. 
+
+% Suppose we have three million users on our media streaming service, and a new
+% user signs up and begins streaming their favorite TV show. We are now tasked
+% with giving this person useful recommendations---which will not at all be
+% controversial--- based on the streamed history. We decide to use our users'
+% preferences for additional recommendations.
+
+% Both of the problems faced in these scenarios can be approached using a
+% $k$-nearest neighbours ($k$-NN) algorithm, which solves the following problem.
+% Given a subset $S\subset \R^m$ and a point $x\in\R^m$, find the $k$ points of
+% $S$ that are closest to $x$. Note that $k$-NN is \emph{not} a clustering
+% algorithm and is, therefore, different from $k$-means and from neighbouring
+% joining although they have similar names. 
+
+% We can solve $k$-NN with a naive algorithm, where we compute all the distances.
+% This is what \Cref{alg:naive-kNN} does.
+
+% \begin{algorithm}
+% 	\caption{Naive $k$-nearest neighbours}\label{alg:naive-kNN}
+% 	\begin{algorithmic}[1]
+% 		\Require a finite subset $S\subset\R^m$, a point $x\in \R^m$, and a positive $k\in\Z$,
+% 		\Ensure a subset $T\subset S$ of size $\min(\#S, k)$.
+% 		\State Set $T = []$.
+% 		\State Set $D = []$.
+% 		\For{$y\in S$}
+% 			\If{$\# D < k$}
+% 				\State Append $y$ to $T$ and $\|x-y\|$ to $D$.
+% 			\ElsIf{$\exists i\in \{1,\dots, k\}$ such that $\|x-y\| < D[i]$}
+% 				\State Remove the $i$th entry of both $T$ and $D$.
+% 				\State Append $y$ to $T$ and $\|x-y\|$ to $D$.
+% 			\EndIf
+% 		\EndFor
+% 		\State \Return $T$ as a set.
+% 	\end{algorithmic}
+% \end{algorithm}
+
+% Observe that \Cref{alg:naive-kNN} is easy to implement, but it is extremely
+% impractical on large data sets $S$. What we are referring to is the
+% \emph{computational complexity}, which is the measure of the amount of resources
+% required to run the algorithm. Often computational complexity considers the
+% \emph{worst-case complexity}, which is the measure of the maximal amount of
+% resources the algorithm uses taken over all possible inputs. This is computed by
+% first determining the ``size'' of the input, say the number of bits required to
+% specify the data, and then determining how much the algorithm needs to do based
+% on that size.
+
+% Computational complexity is one of the main ways we compare algorithms to one
+% another, and it gives us a tool to quantify improvements to algorithms. Of
+% course, it has its limitations---for example, the worst-case input might be so
+% rare that it practically never arises. Computational complexity is determined in
+% different units depending on the application. For simplicity, we will treat all
+% basic operations (vaguely defined such as addition and multiplication) as
+% requiring the same amount of resources. Thus, we say that an algorithm $A$ uses
+% $T(A)$ operations, where one could interpret $T(A)$ as a measure of the time it
+% would take to run algorithm $A$. 
+
+% Let us look at the (computational) complexity of \Cref{alg:naive-kNN}.
+% \Cref{alg:naive-kNN} must compute $\# S$ distances in $\R^m$. If $\# S$ is
+% significantly larger than $k$ (which is often the case in practice), then the
+% search through $D$ is 
 
 
+\section{Wrap up}
 
+The entire focus of the course has been extracting information from a collection
+of data points. For simplicity we interpreted these points as elements of
+$\R^m$, but this is not necessary or even possible sometimes. As we mentioned at
+the start; there is more data than there are grains of sand on Earth. We need
+tools to handle data, and there is no one tool that is best for every situation.
+The ability to know what tools to use and when comes from knowledge and
+practice. 
 
+We will close out the course by revisiting the different topics we covered and
+considering different problems. This can also be considered a review of the
+final examination. 
 
+\subsection{Linear regression}
 
+\subsection{Principal component analysis}
 
+\subsection{$k$-means clustering}
 
-
-
-
-
-
-
-
-
+\subsection{Hierarchical clustering}
 
 
 
