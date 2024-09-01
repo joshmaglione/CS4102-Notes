@@ -763,7 +763,7 @@ questions arise:
 	our line? 
 \end{itemize}
 
-\subsection{Coefficient of determination ($r^2$ values)}
+\subsection{Coefficient of determination ($R^2$ values)}
 
 We are going to make precise how well our hyperplane fits our data. Recall that
 hyperplanes can be replaced by hypersurfaces; see \Cref{sec:nonlinear-fittings}.
@@ -855,14 +855,14 @@ given data.
 
 \begin{defn}
 	The \textbf{coefficient of determination} (also known as the
-	\textbf{$r^2$-value}) is 
+	\textbf{$R^2$-value}) is 
 	\begin{align*} 
-		r^2 &= \dfrac{SSR}{SST} = \dfrac{\|\widehat{Y} - \overline{Y}\|^2}{\| Y - \overline{Y}\|^2} .
+		R^2 &= \dfrac{SSR}{SST} = \dfrac{\|\widehat{Y} - \overline{Y}\|^2}{\| Y - \overline{Y}\|^2} .
 	\end{align*} 
 \end{defn}
 
 \begin{prop}
-	$0\leq r^2 \leq 1$.
+	$0\leq R^2 \leq 1$.
 \end{prop}
 
 \begin{proof}
@@ -872,26 +872,26 @@ given data.
 
 \subsubsection{What do the extremes means?}
 
-The one case where $r^2$ is meaningless is when $SST=0$. This implies both
+The one case where $R^2$ is meaningless is when $SST=0$. This implies both
 $SSR=SSE=0$. Moreover, $Y = \overline{Y} = \overline{y} \mathbbm{1}$, where
 $\mathbbm{1}$ is the all ones column vector. Hence, every data point $y_i$ is
 the same and, therefore, equal to the mean. Let's never return to this case.
 
-We can have $SSR=0$, which is equivalent to $r^2=0$. This implies that $\|
+We can have $SSR=0$, which is equivalent to $R^2=0$. This implies that $\|
 \widehat{Y} - \overline{Y}\|^2= 0$, so that $\widehat{Y} = \overline{Y}$. In
 other words, our prediction $\widehat{y}_i$ is just simply the mean. This means
 we have not found any relationship between the independent variables and the
 dependent variables. 
 
-In the other extreme we have $SSR=SST$, which is equivalent to $r^2=1$. This
+In the other extreme we have $SSR=SST$, which is equivalent to $R^2=1$. This
 implies that $Y = \widehat{Y}$, so the given data lies (exactly) on the surface
 given by $y=f(x_1,\dots, x_{p-1})$. That is, the regression function exactly
 predicts the data. 
 
-To summarize, when $r^2=0$, we cannot deduce any relationship between the
-independent and dependent variables, and when $r^2=1$, we understand completely
+To summarize, when $R^2=0$, we cannot deduce any relationship between the
+independent and dependent variables, and when $R^2=1$, we understand completely
 the relationship between the independent and dependent variables. Very roughly
-speaking, the $r^2$ can be thought of as the ratio of how well the regression
+speaking, the $R^2$ can be thought of as the ratio of how well the regression
 fits the data. 
 
 \subsection{In class exercises pt. III}
@@ -909,7 +909,7 @@ fits the data.
 		\item $SSE = \|Y\|^2 - \| \widehat{Y} \|^2$,
 		\item $SSR = \| \widehat{Y} \|^2 - \| \overline{Y} \|^2$.
 	\end{enumerate}
-	\item What are the $r^2$ values for the examples above?
+	\item What are the $R^2$ values for the examples above?
 \end{enumerate}
 
 
@@ -987,8 +987,8 @@ of the orange vector pointing to the top left.
 Note also that in \Cref{fig:pca-example2} knowing the $x$ value gives one a good
 approximation for the $y$ value and vice versa. In this case, we might say that
 the data has a moderate amount of redundancy, whereas if the data points had a
-much higher $r^2$ value to its line of best fit, we would say the data have high
-redundancy. (And if the data had a much lower $r^2$ value, we would say the data
+much higher $R^2$ value to its line of best fit, we would say the data have high
+redundancy. (And if the data had a much lower $R^2$ value, we would say the data
 have low redundancy.) One of the aims of PCA is to lower redundancy. For the
 $2$-dimensional case, this is simple---take the line of best fit, but for
 arbitrarily higher dimensions, this is not obvious. 
