@@ -59,6 +59,16 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\tr}{\mathrm{t}}
+\newcommand{\WEEK}[1]{%
+\hfill Week #1
+
+\vspace{-1em}
+
+\begin{center}
+	\rule{\textwidth}{2pt}
+\end{center}
+\vspace{0.5em}%
+}
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
@@ -374,7 +384,9 @@ If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 	(Round $b_0$ and $b_1$ to the nearest half integer.)
 \end{enumerate}
 
-\iffalse
+\WEEK{1}
+
+
 \subsection{Plane of best fit}
 
 We consider two independent variables and one dependent variable now. Consider
@@ -913,7 +925,7 @@ fits the data.
 	\item What are the $R^2$ values for the examples above?
 \end{enumerate}
 
-
+\iffalse
 
 \section{Principal component analysis}
 
