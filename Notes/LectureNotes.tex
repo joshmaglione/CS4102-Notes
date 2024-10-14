@@ -1012,7 +1012,7 @@ arbitrarily higher dimensions, this is not obvious.
 \WEEK{4}
 
 
-Suppose we have $n$ measurements 
+Suppose we have $n$ measurements of the same kind (like length)
 \[ 
 	U = \{u_1, u_2, \dots, u_n\} \qquad \text{ and } \qquad V = \{v_1, v_2, \dots, v_n\}
 \] 
@@ -1044,13 +1044,18 @@ We generalize from two vectors to $m$ vectors. Write
 \end{align*}
 where $x_i'$ is a row vector. Note that the rows of $X$ correspond to
 measurements of a particular type, and the columns of $X$ correspond to all
-measurements of a particular trail. Using \Cref{eqn:vec-covar}, we define the
+measurements of a particular trial. In other words, our data points are the
+columns of $X$, and each entry of a data point is a measurement of a particular
+type. 
+
+Using \Cref{eqn:vec-covar}, we define the
 \textbf{covariance matrix} of $X$ to be 
 \begin{align*} 
 	C_X &= \dfrac{1}{n} XX^{\tr} .
 \end{align*} 
 
 \begin{lem}\label{lem:covariance-properties}
+	\hfill 
 	\begin{enumerate}
 		\item The matrix $C_X$ is symmetric. That is, $C_X = C_X^{\tr}$.
 		\item The diagonal entries of $C_X$ are variances.
@@ -1185,6 +1190,8 @@ all pairs of basis vectors $(e_i,e_j)$ for all $i,j\in\{1,\dots, m\}$. Thus,
 distance preserving is equivalent to $P^{\tr}P = I_m$, but these matrices are
 called \textbf{orthogonal}. (Note: pairs of distinct columns of such a matrix
 $P$ are pairwise orthogonal. Can you prove this?!) 
+
+\WEEK{5}
 
 Let us bring this back to the equation we established. We want $P$ to be an
 orthogonal matrix such that 
