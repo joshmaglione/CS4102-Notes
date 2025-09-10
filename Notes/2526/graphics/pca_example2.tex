@@ -1,0 +1,27 @@
+\documentclass[12pt]{standalone}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{mathpazo}
+\usepackage{xcolor}
+\pgfplotsset{compat=1.16,set layers, mark layer=axis tick labels}
+
+\begin{document}
+\begin{tikzpicture}
+    \begin{axis}[
+        grid=major,
+        width=0.6\textwidth,
+        height=0.6\textwidth,
+        axis equal,
+        xlabel=$x$,
+        ylabel=$y$,
+    ]
+        \addplot+[only marks, mark size=2, color=blue] table [col sep=comma] {pcadata.csv};
+        \addplot[only marks, mark size=2, color=orange] coordinates {(0, 0)}; 
+        \addplot[domain=0.027:2.75, samples=2, color=orange, ultra thick]{1.98*x};
+        \addplot[domain=-1.1:0.027, samples=2, color=orange, ultra thick]{- 0.505*x};
+        \node at (4, 5.5) {$\sigma^2_{\mathrm{s}}$};
+        \node at (-2, 1) {$\sigma^2_{\mathrm{n}}$};
+    \end{axis}
+\end{tikzpicture}
+\end{document}
