@@ -73,6 +73,9 @@
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
+% Configure comments to flush right
+\renewcommand{\algorithmiccomment}[1]{\hfill \# #1}
+
 \setcounter{tocdepth}{2}
 
 \allowdisplaybreaks
@@ -1487,6 +1490,95 @@ is a subspace of $V$.
 	eigenvectors of $M$. Hence, by induction, the statement holds. 
 \end{proof}
 
+\subsection{Random Projections and Johnson--Lindenstrauss}
+
+We now cover a topic somewhat related to \textbf{Principal Component Analysis
+(PCA)} but also very different. The main question we are concerned with is
+whether we can accomplish dimension reduction without PCA?
+
+Suppose we have $n$ data points in $\R^m$ and we want to project it to $\R^k$
+with $k$ much smaller than $m$ while preserving the geometry as much as we can.
+In other words, we want a map $\varphi: \R^m \to \R^k$ such that all distances are
+preserved. In symbols, we want, for a small $\varepsilon > 0$ and a subset $S
+\subseteq \R^m$, for all $u, v \in S$:
+\begin{equation}\label{eqn:thres}
+	(1 - \varepsilon) \lVert u - v \rVert^2 \leq \lVert \varphi(u) - \varphi(v)
+	\rVert^2 \leq (1 + \varepsilon) \lVert u - v \rVert^2
+\end{equation}
+So that $\varepsilon$ gives us an \textbf{approximation threshold}.
+
+This is different from what happens with PCA. In that case, $\varphi$ is given
+by matrix multiplication: using only the first $k$ principal components. There,
+the \textbf{average error} is small, so that some distances can have large
+errors, and most would be small. In our context right now, $\varphi$ is much
+more controlled.
+
+The idea to create $\varphi: \R^m \to \R^k$ so that~\eqref{eqn:thres} is
+satisfied is simple: project onto a random $k$-dimensional subspace. See Algorithm~\ref{alg:JL}.
+
+\begin{algorithm}
+	\caption{Random Projection}\label{alg:JL}
+	\begin{algorithmic}
+		\Require $X \in \text{Mat}_{m \times n}(\R)$ and $k \in \N$.
+		\Ensure $Y \in \text{Mat}_{k \times n}(\R)$.
+		\For{$i \in \{1, \dots, k\}$}
+			\State Choose random vector $v_i$ from a \textbf{Gaussian distribution}.
+			\State Rescale $v_i$: $v_i = \sqrt{\frac{m}{\lVert v_i \rVert^2}} v_i$
+			\Comment{Useful for proof.}
+		\EndFor
+		\For{each column of $X$, $x_i$}
+			\State $y_i = (x_i \cdot v_1, x_i \cdot v_2, \dots, x_i \cdot v_k)^T$
+		\EndFor
+		\State $Y = [y_1, y_2, \dots, y_n]$
+		\State \Return $Y$.
+	\end{algorithmic}
+\end{algorithm}
+
+The following theorem states the probability of this approach yielding the
+desired outcome.
+
+\begin{thm}[Johnson--Lindenstrauss (1984)]\label{thm:JL}
+	There exists $\varphi: \R^m \to \R^k$ satisfying the inequalities
+	in~\eqref{eqn:thres} with probability at least $1 - \frac{1}{n}$ as long as 
+	\[
+		k \geq \frac{8 \ln(n)}{\varepsilon^2}
+	\]
+	where $\varphi$ is of the form 
+	\[
+		\varphi(x) = \frac{1}{\sqrt{k}} A x
+	\]
+	where $A$ is a matrix with independent and identically distributed
+	\textbf{Gaussian entries} with zero mean and unit variance.
+\end{thm}
+
+We will not prove Theorem~\ref{thm:JL}.
+
+\begin{remark}
+	Although this is called the JL Lemma (or Theorem), this formulation benefits
+	from recent research on these problems. One can get better bounds for $k$;
+	see Frankl--Maehara~\cite{FM/90}. The conditions on the independent and
+	identically distributed Gaussian entries is an improvement due to
+	Har-Peled--Indyk--Motwani; see~\cite{HPIM/12}.
+\end{remark}
+
+Now that we have two ways to perform dimension reduction, when should we use one
+over the other?
+\begin{itemize}
+	\item Generally, PCA is the safest. It preserves largest distances, but may
+	not preserve the smaller ones. This is essentially down to PCA caring about
+	\textbf{high variance} and disregarding \textbf{low variance}. However, PCA
+	might be computationally expensive.
+	\item If you want more control over the distances (i.e.\ want them all
+	essentially the same) or if you need to optimize time or memory, then a
+	random projection would be better, provided the hypotheses of
+	Theorem~\ref{thm:JL} hold.
+\end{itemize}
+It is possible to use both with good success; see~\cite{YLDW/21}.
+
+
+
+
+
 \section{Clustering}
 
 Similar to PCA, clustering is a way to understand structure of data. Clustering
@@ -2182,7 +2274,7 @@ clique. Hence, we have exactly one cluster starting at $G_8$ using
 complete-linkage. The dendrograms can be seen in
 \Cref{fig:dendrogram-slink,,fig:dendrogram-clink}. 
 
-\afterpage{\clearpage}
+% \afterpage{\clearpage}
 
 \begin{figure}[h]
 	\centering 
@@ -2254,11 +2346,37 @@ complete-linkage. The dendrograms can be seen in
 		publisher={National Acad Sciences},
 	}
 
+	\bib{FM/90}{article}{
+		author={Frankl, Peter},
+		author={Maehara, Hiroshi},
+		title={Some geometric applications of the beta distribution},
+		journal={Ann. Inst. Statist. Math.},
+		volume={42},
+		date={1990},
+		number={3},
+		pages={463--474},
+		issn={0020-3157},
+	}
+
 	\bib{Google}{article}{
 		author={Google},
 		title={What is Clustering?}
 		date={2023},
 		status={date accessed: 16 Oct.\ 2023. \url{https://developers.google.com/machine-learning/clustering/overview}},
+	}
+
+	\bib{HPIM/12}{article}{
+		author={Har-Peled, Sariel},
+		author={Indyk, Piotr},
+		author={Motwani, Rajeev},
+		title={Approximate nearest neighbor: towards removing the curse of
+		dimensionality},
+		journal={Theory Comput.},
+		volume={8},
+		date={2012},
+		pages={321--350},
+		review={\MR{2948494}},
+		doi={10.4086/toc.2012.v008a014},
 	}
 
 	\bib{ILA}{book}{
@@ -2274,6 +2392,13 @@ complete-linkage. The dendrograms can be seen in
 		title={A tutorial on principal component analysis},
 		date={2014},
 		status={\href{https://arxiv.org/abs/1404.1100}{\texttt{arXiv:1404.1100}}},
+	}
+
+	\bib{YLDW/21}{unpublished}{
+      title={How to reduce dimension with PCA and random projections?}, 
+      author={Fan Yang and Sifan Liu and Edgar Dobriban and David P. Woodruff},
+      year={2021},
+      status={\href{https://arxiv.org/abs/2005.00511}{\texttt{arXiv:2005.00511}}}, 
 	}
 \end{biblist}
 \end{bibdiv}
