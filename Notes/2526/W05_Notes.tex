@@ -73,316 +73,319 @@
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
+% Configure comments to flush right
+\renewcommand{\algorithmiccomment}[1]{\hfill \# #1}
+
 \setcounter{tocdepth}{2}
 
 \allowdisplaybreaks
 
-\title{Geometric Foundations of Data Analysis I: \\ Week 1}
+\title{Geometric Foundations of Data Analysis I: \\ Week 5}
 \author{Joshua Maglione}
-\date{8 September 2025}
+\date{6 October 2025}
 
 \begin{document}
 
 \maketitle
 \tableofcontents
 
-\section{Introduction}
+% \section{Introduction}
 
-Data analysis and more broadly Data Science is a vast and important field within
-Computer Science and Mathematics. At the core, the goal is to make sense of
-data, which can be measurements, survey results, behavior patterns, etc. Often
-this data comes to us in a very ``high dimension''. That is, there are so many
-variables that it is impossible to visualize, and even in low
-dimensions, it may not be clear what the best conclusion is based on the
-analysis. 
+% Data analysis and more broadly Data Science is a vast and important field within
+% Computer Science and Mathematics. At the core, the goal is to make sense of
+% data, which can be measurements, survey results, behavior patterns, etc. Often
+% this data comes to us in a very ``high dimension''. That is, there are so many
+% variables that it is impossible to visualize, and even in low
+% dimensions, it may not be clear what the best conclusion is based on the
+% analysis. 
 
-A few references seem to agree that the \textit{total data} on all computers is
-something like $\mathbf{10^{23}}$ \textbf{bytes} or about \textbf{100
-zettabytes}. While all of this data is not concentrated in one organization, we
-still require highly sophisticated tools to make sense of a huge amount of data.
-My goal with this course is that you will have a solid foundation with some
-standard tools. From this bedrock one could explore more sophisticated methods
-of data analysis more easily. 
+% A few references seem to agree that the \textit{total data} on all computers is
+% something like $\mathbf{10^{23}}$ \textbf{bytes} or about \textbf{100
+% zettabytes}. While all of this data is not concentrated in one organization, we
+% still require highly sophisticated tools to make sense of a huge amount of data.
+% My goal with this course is that you will have a solid foundation with some
+% standard tools. From this bedrock one could explore more sophisticated methods
+% of data analysis more easily. 
 
-\bigskip
+% \bigskip
 
-\noindent We will consider four key topics:
-\begin{enumerate} 
-	\item Least Squares Fitting,
-	\item Principal Component Analysis,
-	\item $k$-Means and Hierarchical Clustering,
-	\item Nearest Neighbors and the Johnson--Lindenstrauss Theorem
-\end{enumerate}
+% \noindent We will consider four key topics:
+% \begin{enumerate} 
+% 	\item Least Squares Fitting,
+% 	\item Principal Component Analysis,
+% 	\item $k$-Means and Hierarchical Clustering,
+% 	\item Nearest Neighbors and the Johnson--Lindenstrauss Theorem
+% \end{enumerate}
 
-We will be working with the assumption that \textbf{the data we care about is
-preserved by orthogonal and linear transformations}. This is not true with all
-data---for example, one should not take (proper) linear combinations of people.
-However, for data like grams of different kinds of food, this is completely
-plausible. This assumption will not always be necessary, but we will just keep
-this in mind. 
+% We will be working with the assumption that \textbf{the data we care about is
+% preserved by orthogonal and linear transformations}. This is not true with all
+% data---for example, one should not take (proper) linear combinations of people.
+% However, for data like grams of different kinds of food, this is completely
+% plausible. This assumption will not always be necessary, but we will just keep
+% this in mind. 
 
-Half of our time will be spent bringing these ideas to life and getting our
-hands dirty. We will be working with Jupyter Notebooks to build familiarity with
-the concepts we will discuss. This will be done using Python and standard data
-analysis packages like Pandas. 
+% Half of our time will be spent bringing these ideas to life and getting our
+% hands dirty. We will be working with Jupyter Notebooks to build familiarity with
+% the concepts we will discuss. This will be done using Python and standard data
+% analysis packages like Pandas. 
 
-\section{Least squares fitting}
+% \section{Least squares fitting}
 
-This method of analysis is both simple and powerful. Like with most things in
-mathematics, without some good guiding examples, we can get lost in the
-formulas.
+% This method of analysis is both simple and powerful. Like with most things in
+% mathematics, without some good guiding examples, we can get lost in the
+% formulas.
 
-\subsection{Build up}\label{sec:build-up}
+% \subsection{Build up}\label{sec:build-up}
 
-Suppose we have the following data as seen in \Cref{fig:2d-linear-data}. (Maybe
-a company produces parts once per month in lots that vary in size depending on
-demand. We write $i$ for the production run, $x_i$ for the lot size, and $y_i$
-for the hours of labor.) 
+% Suppose we have the following data as seen in \Cref{fig:2d-linear-data}. (Maybe
+% a company produces parts once per month in lots that vary in size depending on
+% demand. We write $i$ for the production run, $x_i$ for the lot size, and $y_i$
+% for the hours of labor.) 
 
-\begin{figure}[h]
-	\centering
-	\begin{minipage}{0.33\textwidth}
-		\centering
-		\begin{tabular}{ccc}
-			$i$ & $x_i$ & $y_i$ \\ \hline 
-			1 & 30 & 73 \\ 
-			2 & 20 & 50 \\
-			3 & 60 & 128 \\
-			4 & 80 & 170 \\
-			5 & 40 & 87 \\
-			6 & 50 & 108 \\
-			7 & 60 & 135 \\
-			8 & 30 & 69 \\
-			9 & 70 & 148 \\
-			10 & 60 & 132 
-		\end{tabular}
-	\end{minipage}~%
-	\begin{minipage}{0.60\textwidth}
-		\centering
-		\begin{tikzpicture}
-			\begin{axis}[
-				xlabel={$x$},
-				ylabel={$y$},
-				xmin=10, xmax=90,
-				ymin=40, ymax=180,
-				xtick={10,20,...,90},
-				ytick={40,60,...,180},
-				grid=both,
-				axis lines=middle,
-				width=8cm,
-				height=6cm,
-				]
-				\addplot[only marks, mark=*, mark size=1.5pt, color=blue] table {
-				30 73
-				20 50
-				60 128
-				80 170
-				40 87
-				50 108
-				60 135
-				30 69
-				70 148
-				60 132
-				};
-			\end{axis}
-		\end{tikzpicture}
-	\end{minipage}
-	\caption{Data points exhibiting a linear relationship.}
-	\label{fig:2d-linear-data}
-\end{figure}
+% \begin{figure}[h]
+% 	\centering
+% 	\begin{minipage}{0.33\textwidth}
+% 		\centering
+% 		\begin{tabular}{ccc}
+% 			$i$ & $x_i$ & $y_i$ \\ \hline 
+% 			1 & 30 & 73 \\ 
+% 			2 & 20 & 50 \\
+% 			3 & 60 & 128 \\
+% 			4 & 80 & 170 \\
+% 			5 & 40 & 87 \\
+% 			6 & 50 & 108 \\
+% 			7 & 60 & 135 \\
+% 			8 & 30 & 69 \\
+% 			9 & 70 & 148 \\
+% 			10 & 60 & 132 
+% 		\end{tabular}
+% 	\end{minipage}~%
+% 	\begin{minipage}{0.60\textwidth}
+% 		\centering
+% 		\begin{tikzpicture}
+% 			\begin{axis}[
+% 				xlabel={$x$},
+% 				ylabel={$y$},
+% 				xmin=10, xmax=90,
+% 				ymin=40, ymax=180,
+% 				xtick={10,20,...,90},
+% 				ytick={40,60,...,180},
+% 				grid=both,
+% 				axis lines=middle,
+% 				width=8cm,
+% 				height=6cm,
+% 				]
+% 				\addplot[only marks, mark=*, mark size=1.5pt, color=blue] table {
+% 				30 73
+% 				20 50
+% 				60 128
+% 				80 170
+% 				40 87
+% 				50 108
+% 				60 135
+% 				30 69
+% 				70 148
+% 				60 132
+% 				};
+% 			\end{axis}
+% 		\end{tikzpicture}
+% 	\end{minipage}
+% 	\caption{Data points exhibiting a linear relationship.}
+% 	\label{fig:2d-linear-data}
+% \end{figure}
 
-It seems clear from the plot that the data fits a geometric pattern---there is a
-linear phenomenon. If we try to find the line that is somehow closest to all the
-data points, we might draw something like in \Cref{fig:2d-linear-data-line}. 
+% It seems clear from the plot that the data fits a geometric pattern---there is a
+% linear phenomenon. If we try to find the line that is somehow closest to all the
+% data points, we might draw something like in \Cref{fig:2d-linear-data-line}. 
 
-\begin{figure}[h] 
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[
-			xlabel={$x$},
-			ylabel={$y$},
-			xmin=10, xmax=90,
-			ymin=40, ymax=180,
-			xtick={10,20,...,90},
-			ytick={40,60,...,180},
-			grid=both,
-			axis lines=middle,
-			width=8cm,
-			height=6cm,
-			]
-			\addplot[only marks, mark=*, mark size=1.5pt, color=blue] table {
-			30 73
-			20 50
-			60 128
-			80 170
-			40 87
-			50 108
-			60 135
-			30 69
-			70 148
-			60 132
-			};
-			\addplot[domain=0:90, samples=2, color=orange]{10 + 2*x};
-		\end{axis}
-	\end{tikzpicture}
-	\caption{Line of best fit with data points.}
-	\label{fig:2d-linear-data-line}
-\end{figure}
+% \begin{figure}[h] 
+% 	\centering
+% 	\begin{tikzpicture}
+% 		\begin{axis}[
+% 			xlabel={$x$},
+% 			ylabel={$y$},
+% 			xmin=10, xmax=90,
+% 			ymin=40, ymax=180,
+% 			xtick={10,20,...,90},
+% 			ytick={40,60,...,180},
+% 			grid=both,
+% 			axis lines=middle,
+% 			width=8cm,
+% 			height=6cm,
+% 			]
+% 			\addplot[only marks, mark=*, mark size=1.5pt, color=blue] table {
+% 			30 73
+% 			20 50
+% 			60 128
+% 			80 170
+% 			40 87
+% 			50 108
+% 			60 135
+% 			30 69
+% 			70 148
+% 			60 132
+% 			};
+% 			\addplot[domain=0:90, samples=2, color=orange]{10 + 2*x};
+% 		\end{axis}
+% 	\end{tikzpicture}
+% 	\caption{Line of best fit with data points.}
+% 	\label{fig:2d-linear-data-line}
+% \end{figure}
 
-Although the line is not a perfect fit, it seems to tell us something about the
-relationship between the lots size and the amount of hours. 
+% Although the line is not a perfect fit, it seems to tell us something about the
+% relationship between the lots size and the amount of hours. 
 
-\textbf{Questions:}
-\begin{itemize}
-	\item What makes this line ``better'' than alternatives?
-	\item How are we quantifying ``better''? 
-	\item Why are we using a line? 
-\end{itemize}
-We will answer the first question later, probably. Let us consider the question
-of quantifying ``better''. Least squares fitting is all about minimizing the
-squares of differences between the line and the actual data points. We will make
-this precise very soon.
+% \textbf{Questions:}
+% \begin{itemize}
+% 	\item What makes this line ``better'' than alternatives?
+% 	\item How are we quantifying ``better''? 
+% 	\item Why are we using a line? 
+% \end{itemize}
+% We will answer the first question later, probably. Let us consider the question
+% of quantifying ``better''. Least squares fitting is all about minimizing the
+% squares of differences between the line and the actual data points. We will make
+% this precise very soon.
 
-\subsection{Line of best fit}
+% \subsection{Line of best fit}
 
-We know that the equation of a non-vertical line has the form 
-\begin{align*}
-	y &= b_0 + b_1x.
-\end{align*}
-If we had $n$ data points of the form $(x_i,y_i)$, we could choose $b_0$ and
-$b_1$ to minimize the following sum
-\begin{align*}
-	S(b_0,b_1) = \sum_{i=1}^n \left(y_i - (b_0 + b_1x_i)\right)^2 .
-\end{align*}
+% We know that the equation of a non-vertical line has the form 
+% \begin{align*}
+% 	y &= b_0 + b_1x.
+% \end{align*}
+% If we had $n$ data points of the form $(x_i,y_i)$, we could choose $b_0$ and
+% $b_1$ to minimize the following sum
+% \begin{align*}
+% 	S(b_0,b_1) = \sum_{i=1}^n \left(y_i - (b_0 + b_1x_i)\right)^2 .
+% \end{align*}
 
-We can even solve for these values. Since $S$ is a function in terms of $b_0$
-and $b_1$, all possible minima occur when the partial derivatives of $S$ are
-$0$. In other words, the minima arise as values $(b_0,b_1)$ such that 
-\begin{align*}
-	\dfrac{\partial S}{\partial b_0} &= -2\sum_{i=1}^n \left(y_i - (b_0 + b_1x_i)\right) = 0, \\
-	\dfrac{\partial S}{\partial b_1} &= -2\sum_{i=1}^n \left(x_iy_i - x_i(b_0 + b_1x_i)\right) = 0.
-\end{align*}
-These equations are linear equations, so we can solve for these with techniques
-from linear algebra. This mean, we need to solve two equations in the unknown
-$b_0$ and $b_1$:
-\begin{equation}\label{eqn:least-squares-line}
-	\begin{split}
-		nb_0 + b_1\sum x_i &= \sum y_i, \\
-		b_0 \sum x_i + b_1 \sum x_i^2 &= \sum x_iy_i. 
-	\end{split}
-\end{equation}
+% We can even solve for these values. Since $S$ is a function in terms of $b_0$
+% and $b_1$, all possible minima occur when the partial derivatives of $S$ are
+% $0$. In other words, the minima arise as values $(b_0,b_1)$ such that 
+% \begin{align*}
+% 	\dfrac{\partial S}{\partial b_0} &= -2\sum_{i=1}^n \left(y_i - (b_0 + b_1x_i)\right) = 0, \\
+% 	\dfrac{\partial S}{\partial b_1} &= -2\sum_{i=1}^n \left(x_iy_i - x_i(b_0 + b_1x_i)\right) = 0.
+% \end{align*}
+% These equations are linear equations, so we can solve for these with techniques
+% from linear algebra. This mean, we need to solve two equations in the unknown
+% $b_0$ and $b_1$:
+% \begin{equation}\label{eqn:least-squares-line}
+% 	\begin{split}
+% 		nb_0 + b_1\sum x_i &= \sum y_i, \\
+% 		b_0 \sum x_i + b_1 \sum x_i^2 &= \sum x_iy_i. 
+% 	\end{split}
+% \end{equation}
 
-Using the data from our example in \Cref{sec:build-up}, we have 
-\begin{align*}
-	\sum x_i &= 500, & 
-	\sum y_i &= 1100, & 
-	\sum x_i^2 &= 28400, & 
-	\sum x_iy_i &= 61800. 
-\end{align*}
-Thus, the equations we need to solve are 
-\begin{align*}
-	10b_0 + 500b_1 &= 1100, \\
-	500b_0 + 28400b_1 &= 61800,
-\end{align*}
-which yield $b_0=10$ and $b_1 = 2$. Going back to the context of the initial
-problem: this solution tells us that by increasing the lot size by one, we
-expect to increase the labor hours by two. 
+% Using the data from our example in \Cref{sec:build-up}, we have 
+% \begin{align*}
+% 	\sum x_i &= 500, & 
+% 	\sum y_i &= 1100, & 
+% 	\sum x_i^2 &= 28400, & 
+% 	\sum x_iy_i &= 61800. 
+% \end{align*}
+% Thus, the equations we need to solve are 
+% \begin{align*}
+% 	10b_0 + 500b_1 &= 1100, \\
+% 	500b_0 + 28400b_1 &= 61800,
+% \end{align*}
+% which yield $b_0=10$ and $b_1 = 2$. Going back to the context of the initial
+% problem: this solution tells us that by increasing the lot size by one, we
+% expect to increase the labor hours by two. 
 
-\subsubsection{Written as matrices}
+% \subsubsection{Written as matrices}
 
-Let us write the equations in~\eqref{eqn:least-squares-line} with matrices. This
-might seem like overkill at this stage, but it will set us up nicely to
-generalize. Let 
-\begin{align}\label{eqn:X-Y-B}
-	X &= \begin{pmatrix}
-		1 & x_1 \\
-		1 & x_2 \\
-		\vdots & \vdots \\
-		1 & x_n
-	\end{pmatrix}, & 
-	Y &= \begin{pmatrix}
-		y_1 \\ y_2 \\ \vdots \\ y_n
-	\end{pmatrix}, & 
-	B &= \begin{pmatrix}
-		b_0 \\ b_1 
-	\end{pmatrix}. 
-\end{align}
-Therefore, the equations in~\eqref{eqn:least-squares-line} are equivalent to the
-single matrix equation:
-\begin{align}
-	X^\tr XB = X^\tr Y.
-\end{align}
-If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
+% Let us write the equations in~\eqref{eqn:least-squares-line} with matrices. This
+% might seem like overkill at this stage, but it will set us up nicely to
+% generalize. Let 
+% \begin{align}\label{eqn:X-Y-B}
+% 	X &= \begin{pmatrix}
+% 		1 & x_1 \\
+% 		1 & x_2 \\
+% 		\vdots & \vdots \\
+% 		1 & x_n
+% 	\end{pmatrix}, & 
+% 	Y &= \begin{pmatrix}
+% 		y_1 \\ y_2 \\ \vdots \\ y_n
+% 	\end{pmatrix}, & 
+% 	B &= \begin{pmatrix}
+% 		b_0 \\ b_1 
+% 	\end{pmatrix}. 
+% \end{align}
+% Therefore, the equations in~\eqref{eqn:least-squares-line} are equivalent to the
+% single matrix equation:
+% \begin{align}
+% 	X^\tr XB = X^\tr Y.
+% \end{align}
+% If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 
-\subsection{In class exercises pt. I}
+% \subsection{In class exercises pt. I}
 
-\begin{enumerate}
-	\item 
-	\begin{enumerate} 
-		\item With $X$, $Y$, and $B$ as defined in \Cref{eqn:X-Y-B}, show that 
-		\begin{align*}
-			X^\tr X &= \begin{pmatrix}
-				n & \sum x_i \\ \sum x_i & \sum x_i^2
-			\end{pmatrix}, & 
-			X^\tr Y &= \begin{pmatrix}
-				\sum y_i \\ \sum x_iy_i
-			\end{pmatrix}. 
-		\end{align*}
-		\item Show that $X^\tr XB = X^\tr Y$ is equivalent to
-		\Cref{eqn:least-squares-line}:
-		\begin{align*}
-			nb_0 + b_1\sum x_i &= \sum y_i, \\
-			b_0 \sum x_i + b_1 \sum x_i^2 &= \sum x_iy_i.
-		\end{align*}
-	\end{enumerate}
-	\item Find a least squares fitting line to the following data and draw in
-	the line:
+% \begin{enumerate}
+% 	\item 
+% 	\begin{enumerate} 
+% 		\item With $X$, $Y$, and $B$ as defined in \Cref{eqn:X-Y-B}, show that 
+% 		\begin{align*}
+% 			X^\tr X &= \begin{pmatrix}
+% 				n & \sum x_i \\ \sum x_i & \sum x_i^2
+% 			\end{pmatrix}, & 
+% 			X^\tr Y &= \begin{pmatrix}
+% 				\sum y_i \\ \sum x_iy_i
+% 			\end{pmatrix}. 
+% 		\end{align*}
+% 		\item Show that $X^\tr XB = X^\tr Y$ is equivalent to
+% 		\Cref{eqn:least-squares-line}:
+% 		\begin{align*}
+% 			nb_0 + b_1\sum x_i &= \sum y_i, \\
+% 			b_0 \sum x_i + b_1 \sum x_i^2 &= \sum x_iy_i.
+% 		\end{align*}
+% 	\end{enumerate}
+% 	\item Find a least squares fitting line to the following data and draw in
+% 	the line:
 	
-	\begin{minipage}{0.3\textwidth}
-		\centering 
-		\begin{tabular}{ccc}
-			$i$ & $x_i$ & $y_i$ \\ \hline
-			1 & 1.0 & 1.0 \\ 
-			2 & 2.0 & 1.5 \\
-			3 & 3.0 & 2.0 \\
-			4 & 1.5 & 2.0 \\ 
-			5 & 3.5 & 3.0 \\ 
-			6 & 3.0 & 4.5 \\ 
-			7 & 4.0 & 2.0 \\ 
-			8 & 5.0 & 3.5
-		\end{tabular}
-	\end{minipage}~%
-	\begin{minipage}{0.6\textwidth}
-		\begin{tikzpicture}
-			\begin{axis}[
-				xmin=0.5, xmax=5.5,
-				ymin=0.5, ymax=5,
-				xlabel={$x_i$},
-				ylabel={$y_i$},
-				xtick={1,2,3,4,5},
-				ytick={1,2,3,4},
-				grid=both,
-				axis lines=middle,
-				width=8cm,
-				height=6cm,
-			]
-			\addplot[only marks, mark=*, mark size=2pt, color=blue] table {
-				1.0 1.0
-				2.0 1.5
-				3.0 2.0
-				1.5 2.0
-				3.5 3.0
-				3.0 4.5
-				4.0 2.0
-				5.0 3.5
-			};
-			% \addplot[domain=0:90, samples=2, color=orange]{0.94 + 0.52*x};
-			\end{axis}
-		\end{tikzpicture}
-	\end{minipage}
+% 	\begin{minipage}{0.3\textwidth}
+% 		\centering 
+% 		\begin{tabular}{ccc}
+% 			$i$ & $x_i$ & $y_i$ \\ \hline
+% 			1 & 1.0 & 1.0 \\ 
+% 			2 & 2.0 & 1.5 \\
+% 			3 & 3.0 & 2.0 \\
+% 			4 & 1.5 & 2.0 \\ 
+% 			5 & 3.5 & 3.0 \\ 
+% 			6 & 3.0 & 4.5 \\ 
+% 			7 & 4.0 & 2.0 \\ 
+% 			8 & 5.0 & 3.5
+% 		\end{tabular}
+% 	\end{minipage}~%
+% 	\begin{minipage}{0.6\textwidth}
+% 		\begin{tikzpicture}
+% 			\begin{axis}[
+% 				xmin=0.5, xmax=5.5,
+% 				ymin=0.5, ymax=5,
+% 				xlabel={$x_i$},
+% 				ylabel={$y_i$},
+% 				xtick={1,2,3,4,5},
+% 				ytick={1,2,3,4},
+% 				grid=both,
+% 				axis lines=middle,
+% 				width=8cm,
+% 				height=6cm,
+% 			]
+% 			\addplot[only marks, mark=*, mark size=2pt, color=blue] table {
+% 				1.0 1.0
+% 				2.0 1.5
+% 				3.0 2.0
+% 				1.5 2.0
+% 				3.5 3.0
+% 				3.0 4.5
+% 				4.0 2.0
+% 				5.0 3.5
+% 			};
+% 			% \addplot[domain=0:90, samples=2, color=orange]{0.94 + 0.52*x};
+% 			\end{axis}
+% 		\end{tikzpicture}
+% 	\end{minipage}
 
-	(Round $b_0$ and $b_1$ to the nearest half integer.)
-\end{enumerate}
+% 	(Round $b_0$ and $b_1$ to the nearest half integer.)
+% \end{enumerate}
 
 % \WEEK{1}
 
@@ -1120,146 +1123,149 @@ If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 % 	is an important issue.
 % \end{remark}
 
-% \subsubsection{Assumptions of PCA}
+\setcounter{section}{3}
+\setcounter{subsection}{1}
+\setcounter{thm}{2}
 
-% Before we close this introduction to PCA, let us come back to some of the
-% assumptions we have made along the way. There are three key assumptions we have
-% made in introducing PCA. We will not focus much on these, but users of PCA
-% should know that assumptions have been made. These statements may not
-% necessarily hold for a particular data set. 
+\subsubsection{Assumptions of PCA}
 
-% \begin{enumerate}
-% 	\item \textit{Linearity.} 
+Before we close this introduction to PCA, let us come back to some of the
+assumptions we have made along the way. There are three key assumptions we have
+made in introducing PCA. We will not focus much on these, but users of PCA
+should know that assumptions have been made. These statements may not
+necessarily hold for a particular data set. 
+
+\begin{enumerate}
+	\item \textit{Linearity.} 
 	
-% 	This allows us to reframe the problem as a change of basis problem. 
+	This allows us to reframe the problem as a change of basis problem. 
 
-% 	\item \textit{Large variance is important (and $SNR>1$).}
+	\item \textit{Large variance is important (and $SNR>1$).}
 	
-% 	This can be a very strong assumption and really needs to take into account
-% 	how the data was collected. 
+	This can be a very strong assumption and really needs to take into account
+	how the data was collected. 
 	
-% 	\item \textit{Principal components are orthogonal.}
+	\item \textit{Principal components are orthogonal.}
 	
-% 	This is not always the case, but orthogonality allows us to use linear
-% 	algebra. 
-% \end{enumerate}
+	This is not always the case, but orthogonality allows us to use linear
+	algebra. 
+\end{enumerate}
 
-% \subsection{In class exercises pt. IV}
+\subsection{In class exercises pt. IV}
 
-% \begin{enumerate}
-% 	\item 
-% 	\begin{enumerate}
-% 		\item Show that $C_X$ is symmetric. 
-% 		\item Prove that the diagonal entries of $C_X$ are variances and the
-% 		off-diagonal entries are covariances. 
-% 	\end{enumerate}
-% 	\item Suppose $X$ is an $m\times n$ matrix with sample mean
-% 	$\overline{x}\in\R^m$. Let $X'$ be the shifted data of $X$, so that its
-% 	sample mean is $0$. What is $C_{X'}$ in terms of $X$ and $\overline{x}$?
-% \end{enumerate}
+\begin{enumerate}
+	\item 
+	\begin{enumerate}
+		\item Show that $C_X$ is symmetric. 
+		\item Prove that the diagonal entries of $C_X$ are variances and the
+		off-diagonal entries are covariances. 
+	\end{enumerate}
+	\item Suppose $X$ is an $m\times n$ matrix with sample mean
+	$\overline{x}\in\R^m$. Let $X'$ be the shifted data of $X$, so that its
+	sample mean is $0$. What is $C_{X'}$ in terms of $X$ and $\overline{x}$?
+\end{enumerate}
 
-% \subsection{Performing PCA}\label{sec:perform-pca}
+\subsection{Performing PCA}\label{sec:perform-pca}
 
-% At the heart of performing PCA in practice is the following question. Recall
-% that $C_Y$ is a diagonal matrix; see the discussion around \Cref{eqn:cov-Y}.
+At the heart of performing PCA in practice is the following question. Recall
+that $C_Y$ is a diagonal matrix; see the discussion around Equation (3.3).
 
-% \begin{quest} 
-% 	What is the relationship between $C_X$ and $C_Y$ if $Y = PX$? 
-% \end{quest}
+\begin{quest} 
+	What is the relationship between $C_X$ and $C_Y$ if $Y = PX$? 
+\end{quest}
 
-% \begin{proof}
-% 	From above, we have
-% 	\begin{align*}
-% 		C_Y &= \dfrac{1}{n} YY^{\tr} = \dfrac{1}{n} (PX)(PX)^{\tr} = P C_X P^{\tr}. \qedhere
-% 	\end{align*}
-% \end{proof}
+\begin{proof}
+	From above, we have
+	\begin{align*}
+		C_Y &= \dfrac{1}{n} YY^{\tr} = \dfrac{1}{n} (PX)(PX)^{\tr} = P C_X P^{\tr}. \qedhere
+	\end{align*}
+\end{proof}
 
-% In order to perform a PCA, we need to find a matrix $P$ such that $PC_XP^{\tr}$
-% is diagonal. Importantly, we do not want to change the variances, so we want $P$
-% to be \textit{distance preserving}; that is, we want $P$ to satisfy
-% \begin{align}\label{eqn:dist-preserve}
-% 	\| Pv \| &= \| v\|
-% \end{align}
-% for all vectors $v\in\R^m$. We say such a matrix $P$ is an \textbf{isometry}. We
-% can take \Cref{eqn:dist-preserve} and massage it, so that $P$ must satisfy 
-% \begin{align*}
-% 	v^{\tr} P^{\tr} P v &= (Pv)\cdot (Pv) = v\cdot v = v^{\tr} v
-% \end{align*}
-% for all $v\in \R^m$. Since this needs to hold for all vectors, it must hold for
-% all pairs of basis vectors $(e_i,e_j)$ for all $i,j\in\{1,\dots, m\}$. Thus,
-% distance preserving is equivalent to $P^{\tr}P = I_m$, but these matrices are
-% called \textbf{orthogonal}. (Note: pairs of distinct columns of such a matrix
-% $P$ are pairwise orthogonal. Can you prove this?!) 
+In order to perform a PCA, we need to find a matrix $P$ such that $PC_XP^{\tr}$
+is diagonal. Importantly, we do not want to change the variances, so we want $P$
+to be \textit{distance preserving}; that is, we want $P$ to satisfy
+\begin{align}\label{eqn:dist-preserve}
+	\| Pv \| &= \| v\|
+\end{align}
+for all vectors $v\in\R^m$. We say such a matrix $P$ is an \textbf{isometry}. We
+can take \Cref{eqn:dist-preserve} and massage it, so that $P$ must satisfy 
+\begin{align*}
+	v^{\tr} P^{\tr} P v &= (Pv)\cdot (Pv) = v\cdot v = v^{\tr} v
+\end{align*}
+for all $v\in \R^m$. Since this needs to hold for all vectors, it must hold for
+all pairs of basis vectors $(e_i,e_j)$ for all $i,j\in\{1,\dots, m\}$. Thus,
+distance preserving is equivalent to $P^{\tr}P = I_m$, but these matrices are
+called \textbf{orthogonal}. (Note: pairs of distinct columns of such a matrix
+$P$ are pairwise orthogonal. Can you prove this?!) 
 
-% \WEEK{5}
 
-% Let us bring this back to the equation we established. We want $P$ to be an
-% orthogonal matrix such that 
-% \begin{align}\label{eqn:CY-CX}
-% 	C_Y = PC_XP^{\tr} .
-% \end{align} 
-% Moreover, we want $C_Y$ to be a diagonal matrix. Since $P^{\tr}P=I_m$, it
-% follows that $P^{-1} = P^{\tr}$, so using this identity we have 
-% \begin{align*}
-% 	C_Y &= PC_XP^{-1}.
-% \end{align*}
-% Since $C_Y$ is diagonal, this is accomplished through
-% \textit{eigendecomposition}. Therefore, the rows of $P$ are eigenvectors, and
-% the diagonal entries of $C_Y$ are eigenvalues.
+Let us bring this back to the equation we established. We want $P$ to be an
+orthogonal matrix such that 
+\begin{align}\label{eqn:CY-CX}
+	C_Y = PC_XP^{\tr} .
+\end{align} 
+Moreover, we want $C_Y$ to be a diagonal matrix. Since $P^{\tr}P=I_m$, it
+follows that $P^{-1} = P^{\tr}$, so using this identity we have 
+\begin{align*}
+	C_Y &= PC_XP^{-1}.
+\end{align*}
+Since $C_Y$ is diagonal, this is accomplished through
+\textit{eigendecomposition}. Therefore, the rows of $P$ are eigenvectors, and
+the diagonal entries of $C_Y$ are eigenvalues.
 
-% All the entries of $C_Y$ are \textit{real}, and we know that some matrices have
-% complex eigenvalues. For example, the matrix 
-% \begin{align*}
-% 	\begin{pmatrix}
-% 		0 & -1 \\ 1 & 0 
-% 	\end{pmatrix}
-% \end{align*}
-% has eigenvalues $i$ and $-i$, for $i=\sqrt{-1}$. 
-% \begin{quest}\label{quest:PCA-possible}
-% 	Is it always possible to find a real matrix $P$ such that \Cref{eqn:CY-CX}
-% 	holds?
-% \end{quest}
-% The answer to \Cref{quest:PCA-possible} is ``Yes,'' and we will prove it later.
-% For now, let us assume it is always possible. 
+All the entries of $C_Y$ are \textit{real}, and we know that some matrices have
+complex eigenvalues. For example, the matrix 
+\begin{align*}
+	\begin{pmatrix}
+		0 & -1 \\ 1 & 0 
+	\end{pmatrix}
+\end{align*}
+has eigenvalues $i$ and $-i$, for $i=\sqrt{-1}$. 
+\begin{quest}\label{quest:PCA-possible}
+	Is it always possible to find a real matrix $P$ such that \Cref{eqn:CY-CX}
+	holds?
+\end{quest}
+The answer to Question~\ref{quest:PCA-possible} is ``Yes,'' and we will prove it later.
+For now, let us assume it is always possible. 
 
-% \medskip
+\medskip
 
-% We give a recipe for cooking up the principal components.
-% \begin{description}
-% 	\item[Given:] $n$ data points $x_i\in\R^m$ (of roughly the same scale),
-% 	\item[Return:] $m$ principal components.
-% \end{description}
-% \begin{enumerate}
-% 	\item Compute the mean of each coordinate: $\mu_j = \sum_i x_{ij}$,
-% 	\item Organize the normalised data into a matrix $X = (x_{ij} - \mu_j)$,
-% 	\item Compute the covariance matrix $C_X$ of $X$,
-% 	\item Compute the eigenvectors of $C_X$, and sort them based on their
-% 	eigenvalues: largest is first and smallest is last.
-% 	\item Return the (ordered) orthonormal basis of eigenvectors. 
-% \end{enumerate}
+We give a recipe for cooking up the principal components.
+\begin{description}
+	\item[Given:] $n$ data points $x_i\in\R^m$ (of roughly the same scale),
+	\item[Return:] $m$ principal components.
+\end{description}
+\begin{enumerate}
+	\item Compute the mean of each coordinate: $\mu_j = \sum_i x_{ij}$,
+	\item Organize the normalised data into a matrix $X = (x_{ij} - \mu_j)$,
+	\item Compute the covariance matrix $C_X$ of $X$,
+	\item Compute the eigenvectors of $C_X$, and sort them based on their
+	eigenvalues: largest is first and smallest is last.
+	\item Return the (ordered) orthonormal basis of eigenvectors. 
+\end{enumerate}
 
-% PCA is a phrase used for this algorithm together with its analysis, and one of
-% the main ways PCA is performed is by taking only the first $k$ principal
-% components (rather than all $m$). Here, $k$ is usually determined by the
-% \textit{eigenvalues}. 
+PCA is a phrase used for this algorithm together with its analysis, and one of
+the main ways PCA is performed is by taking only the first $k$ principal
+components (rather than all $m$). Here, $k$ is usually determined by the
+\textit{eigenvalues}. 
 
-% Both $C_X$ and $C_Y$ have the same eigenvalues: $\lambda_1 \geq \lambda_2 \geq
-% \cdots \geq \lambda_m$. Since the trace of matrix is the sum of its eigenvalues,
-% both $C_X$ and $C_Y$ have the same trace. In other words, 
-% \begin{align*}
-% 	\mathrm{tr}(C_X) &= \sum_{i=1}^m \lambda_i,
-% \end{align*}
-% and by \Cref{lem:covariance-properties}, the sum of the variances is the sum of
-% the eigenvalues. Because we view variability as an important measurement to keep
-% track of, we can choose a $k$ that both maximizes the amount of variability
-% ``seen'' and while minimizing the value of $k$. This is a bit more of an art
-% than a science, but one general rule could be to choose the smallest $k$ such
-% that 
-% \begin{align} \label{eqn:k-rule}
-% 	\dfrac{\sum_{i=1}^k\lambda_i}{\sum_{i=1}^m\lambda_i} \geq 0.95.
-% \end{align} 
-% For such a $k$, one might say that the first $k$ principal components capture
-% $95\%$ of the total variability.
+Both $C_X$ and $C_Y$ have the same eigenvalues: $\lambda_1 \geq \lambda_2 \geq
+\cdots \geq \lambda_m$. Since the trace of matrix is the sum of its eigenvalues,
+both $C_X$ and $C_Y$ have the same trace. In other words, 
+\begin{align*}
+	\mathrm{tr}(C_X) &= \sum_{i=1}^m \lambda_i,
+\end{align*}
+and by Lemma~3.1, the sum of the variances is the sum of
+the eigenvalues. Because we view variability as an important measurement to keep
+track of, we can choose a $k$ that both maximizes the amount of variability
+``seen'' and while minimizing the value of $k$. This is a bit more of an art
+than a science, but one general rule could be to choose the smallest $k$ such
+that 
+\begin{align} \label{eqn:k-rule}
+	\dfrac{\sum_{i=1}^k\lambda_i}{\sum_{i=1}^m\lambda_i} \geq 0.95.
+\end{align} 
+For such a $k$, one might say that the first $k$ principal components capture
+$95\%$ of the total variability.
 
 % \begin{quest}\label{quest:small-PC}
 % 	Are the principal components $k+1$ through $m$ useless? 
@@ -1486,6 +1492,95 @@ If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 % 	eigenvector of $M$. By iterating this argument, $U$ contains all other
 % 	eigenvectors of $M$. Hence, by induction, the statement holds. 
 % \end{proof}
+
+% \subsection{Random Projections and Johnson--Lindenstrauss}
+
+% We now cover a topic somewhat related to \textbf{Principal Component Analysis
+% (PCA)} but also very different. The main question we are concerned with is
+% whether we can accomplish dimension reduction without PCA?
+
+% Suppose we have $n$ data points in $\R^m$ and we want to project it to $\R^k$
+% with $k$ much smaller than $m$ while preserving the geometry as much as we can.
+% In other words, we want a map $\varphi: \R^m \to \R^k$ such that all distances are
+% preserved. In symbols, we want, for a small $\varepsilon > 0$ and a subset $S
+% \subseteq \R^m$, for all $u, v \in S$:
+% \begin{equation}\label{eqn:thres}
+% 	(1 - \varepsilon) \lVert u - v \rVert^2 \leq \lVert \varphi(u) - \varphi(v)
+% 	\rVert^2 \leq (1 + \varepsilon) \lVert u - v \rVert^2
+% \end{equation}
+% So that $\varepsilon$ gives us an \textbf{approximation threshold}.
+
+% This is different from what happens with PCA. In that case, $\varphi$ is given
+% by matrix multiplication: using only the first $k$ principal components. There,
+% the \textbf{average error} is small, so that some distances can have large
+% errors, and most would be small. In our context right now, $\varphi$ is much
+% more controlled.
+
+% The idea to create $\varphi: \R^m \to \R^k$ so that~\eqref{eqn:thres} is
+% satisfied is simple: project onto a random $k$-dimensional subspace. See Algorithm~\ref{alg:JL}.
+
+% \begin{algorithm}
+% 	\caption{Random Projection}\label{alg:JL}
+% 	\begin{algorithmic}
+% 		\Require $X \in \text{Mat}_{m \times n}(\R)$ and $k \in \N$.
+% 		\Ensure $Y \in \text{Mat}_{k \times n}(\R)$.
+% 		\For{$i \in \{1, \dots, k\}$}
+% 			\State Choose random vector $v_i$ from a \textbf{Gaussian distribution}.
+% 			\State Rescale $v_i$: $v_i = \sqrt{\frac{m}{\lVert v_i \rVert^2}} v_i$
+% 			\Comment{Useful for proof.}
+% 		\EndFor
+% 		\For{each column of $X$, $x_i$}
+% 			\State $y_i = (x_i \cdot v_1, x_i \cdot v_2, \dots, x_i \cdot v_k)^T$
+% 		\EndFor
+% 		\State $Y = [y_1, y_2, \dots, y_n]$
+% 		\State \Return $Y$.
+% 	\end{algorithmic}
+% \end{algorithm}
+
+% The following theorem states the probability of this approach yielding the
+% desired outcome.
+
+% \begin{thm}[Johnson--Lindenstrauss (1984)]\label{thm:JL}
+% 	There exists $\varphi: \R^m \to \R^k$ satisfying the inequalities
+% 	in~\eqref{eqn:thres} with probability at least $1 - \frac{1}{n}$ as long as 
+% 	\[
+% 		k \geq \frac{8 \ln(n)}{\varepsilon^2}
+% 	\]
+% 	where $\varphi$ is of the form 
+% 	\[
+% 		\varphi(x) = \frac{1}{\sqrt{k}} A x
+% 	\]
+% 	where $A$ is a matrix with independent and identically distributed
+% 	\textbf{Gaussian entries} with zero mean and unit variance.
+% \end{thm}
+
+% We will not prove Theorem~\ref{thm:JL}.
+
+% \begin{remark}
+% 	Although this is called the JL Lemma (or Theorem), this formulation benefits
+% 	from recent research on these problems. One can get better bounds for $k$;
+% 	see Frankl--Maehara~\cite{FM/90}. The conditions on the independent and
+% 	identically distributed Gaussian entries is an improvement due to
+% 	Har-Peled--Indyk--Motwani; see~\cite{HPIM/12}.
+% \end{remark}
+
+% Now that we have two ways to perform dimension reduction, when should we use one
+% over the other?
+% \begin{itemize}
+% 	\item Generally, PCA is the safest. It preserves largest distances, but may
+% 	not preserve the smaller ones. This is essentially down to PCA caring about
+% 	\textbf{high variance} and disregarding \textbf{low variance}. However, PCA
+% 	might be computationally expensive.
+% 	\item If you want more control over the distances (i.e.\ want them all
+% 	essentially the same) or if you need to optimize time or memory, then a
+% 	random projection would be better, provided the hypotheses of
+% 	Theorem~\ref{thm:JL} hold.
+% \end{itemize}
+% It is possible to use both with good success; see~\cite{YLDW/21}.
+
+
+
+
 
 % \section{Clustering}
 
@@ -2182,7 +2277,7 @@ If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 % complete-linkage. The dendrograms can be seen in
 % \Cref{fig:dendrogram-slink,,fig:dendrogram-clink}. 
 
-% \afterpage{\clearpage}
+% % \afterpage{\clearpage}
 
 % \begin{figure}[h]
 % 	\centering 
@@ -2254,11 +2349,37 @@ If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 % 		publisher={National Acad Sciences},
 % 	}
 
+% 	\bib{FM/90}{article}{
+% 		author={Frankl, Peter},
+% 		author={Maehara, Hiroshi},
+% 		title={Some geometric applications of the beta distribution},
+% 		journal={Ann. Inst. Statist. Math.},
+% 		volume={42},
+% 		date={1990},
+% 		number={3},
+% 		pages={463--474},
+% 		issn={0020-3157},
+% 	}
+
 % 	\bib{Google}{article}{
 % 		author={Google},
 % 		title={What is Clustering?}
 % 		date={2023},
 % 		status={date accessed: 16 Oct.\ 2023. \url{https://developers.google.com/machine-learning/clustering/overview}},
+% 	}
+
+% 	\bib{HPIM/12}{article}{
+% 		author={Har-Peled, Sariel},
+% 		author={Indyk, Piotr},
+% 		author={Motwani, Rajeev},
+% 		title={Approximate nearest neighbor: towards removing the curse of
+% 		dimensionality},
+% 		journal={Theory Comput.},
+% 		volume={8},
+% 		date={2012},
+% 		pages={321--350},
+% 		review={\MR{2948494}},
+% 		doi={10.4086/toc.2012.v008a014},
 % 	}
 
 % 	\bib{ILA}{book}{
@@ -2274,6 +2395,13 @@ If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 % 		title={A tutorial on principal component analysis},
 % 		date={2014},
 % 		status={\href{https://arxiv.org/abs/1404.1100}{\texttt{arXiv:1404.1100}}},
+% 	}
+
+% 	\bib{YLDW/21}{unpublished}{
+%       title={How to reduce dimension with PCA and random projections?}, 
+%       author={Fan Yang and Sifan Liu and Edgar Dobriban and David P. Woodruff},
+%       year={2021},
+%       status={\href{https://arxiv.org/abs/2005.00511}{\texttt{arXiv:2005.00511}}}, 
 % 	}
 % \end{biblist}
 % \end{bibdiv}

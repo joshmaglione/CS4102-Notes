@@ -1,0 +1,222 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage{enumerate}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=blue,
+	urlcolor=blue,
+	citecolor=blue,
+}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[margin=3cm]{geometry}
+\usepackage{mathpazo}
+\usepackage{url}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{cleveref}
+\usepackage{amsrefs}
+\usepackage{bbm}
+\usepackage{csquotes}
+\usepackage{wrapfig}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{mathrsfs}
+\usepackage{afterpage}
+
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem*{thm*}{Theorem}
+\newtheorem*{con*}{Conjecture}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{conj}[thm]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{ex}[thm]{Example}
+\newtheorem{quest}[thm]{Question}
+\newtheorem{obs}[thm]{Observation}
+
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\tr}{\mathrm{t}}
+\newcommand{\WEEK}[1]{%
+\hfill Week #1
+
+\vspace{-1em}
+
+\begin{center}
+	\rule{\textwidth}{2pt}
+\end{center}
+\vspace{0.5em}%
+}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% Configure comments to flush right
+\renewcommand{\algorithmiccomment}[1]{\hfill \# #1}
+
+\setcounter{tocdepth}{2}
+
+\allowdisplaybreaks
+
+\title{Geometric Foundations of Data Analysis I: \\ Week 6}
+\author{Joshua Maglione}
+\date{13 October 2025}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\setcounter{section}{3}
+\setcounter{subsection}{3}
+\setcounter{thm}{4}
+
+\begin{quest}\label{quest:small-PC}
+	Are the principal components $k+1$ through $m$ useless? 
+\end{quest}
+
+\subsection{Projections}
+
+The answer to Question~\ref{quest:small-PC} is essentially ``Yes'', and it can be
+helpful to consider an idealised example. 
+
+Recall that $X$ is our $m\times n$ matrix whose columns are our $n$ data points
+in $\R^m$. The matrix $P$ is obtained from the eigenvectors of $C_X$, which are
+the rows of $P$, and $Y=PX$. Moreover, $P$ is an orthogonal matrix. Suppose $k <
+m$ and 
+\[ 
+	\lambda_{k+1} = \lambda_{k+2} = \cdots = \lambda_m = 0. 
+\]
+Therefore, we have 
+\[ 
+	C_Y = \begin{pmatrix} 
+		\lambda_1 & & & & & \\
+		& \ddots & & & \\
+		& & \lambda_k & & & \\
+		& & & 0 & & \\
+		& & & & \ddots & \\
+		& & & & & 0
+	\end{pmatrix} .
+\] 
+
+\begin{remark}\label{rem:tail-zeroes}
+	In this situation, $y_{rj}=0$ for all $k+1 \leq r \leq m$ and all $1\leq j
+	\leq n$. (Can you show this?!) In other words, the ``new'' data point $y_j$
+	has a tail of zeroes. 
+\end{remark}
+
+\begin{lem}\label{lem:projection}
+	Let $Q$ be the first $k$ rows of $P$, so that $Q$ is $k\times m$. Then for
+	all columns $x_i,x_j\in\R^m$ of $X$, 
+	\[ 
+		d_{\R^m}(x_i, x_j) = d_{\R^k}(Qx_i, Qx_j).
+	\] 
+\end{lem}
+
+\begin{proof} 
+	For each column $x_i$ of $X$, we have $Px_i = y_i$, where $y_i$ is the $i$th
+	column of $Y$. Since $P$ is orthogonal, $d_{\R^m}(Px_i, Px_j)= d_{\R^m}(x_i,
+	x_j)$. Thus, by \ref{rem:tail-zeroes}
+	\begin{align*}
+		d_{\R^m}(Px_i, Px_j)^2 &= d_{\R^m}(y_i, y_j)^2 \\
+		&= \sum_{r=1}^m (y_{ri} - y_{rj})^2 \\
+		&= \sum_{r=1}^k (y_{ri} - y_{rj})^2 \\ 
+		&= d_{\R^k}(Qx_i, Qx_j)^2. \qedhere
+	\end{align*}
+\end{proof}
+
+The key application of Lemma~\ref{lem:projection} is that ignoring rows $k+1$ through
+$m$ in the matrix $P$ does not change the geometry! That is, we can project the
+data to a smaller dimension and distances between the data points remain
+unchanged! 
+
+In practice the $\lambda_i$ are strictly greater than $0$, so this idealised
+situation does not occur. Using our rule in Equation (3.6), then the
+projected data would approximate the original geometry quite well. The larger
+the ratio, the better the approximation, so there is indeed a trade off. Thus,
+after constructing all of the principal components, one can take the first $k$,
+and project the original data (i.e.\ the matrix $X$) into a smaller dimension by
+constructing the matrix $Q$ from the first $k$ rows of $P$. 
+
+\subsection{PCA is always possible---the Spectral Theorem}
+
+The real power of PCA is that we can \textit{always} perform it. One does not
+need to input parameters; just the data. Note there is a pre-processing stage of
+normalising and rescaling, but this can be applied to all data. We address
+Question~3.4 which, at the time, we just assumed was true. In order
+to do this, we prove the Spectral Theorem.
+
+\begin{thm}[Spectral Theorem]\label{thm:spectral-thm}
+	Let $M$ be a real symmetric $n\times n$ matrix. Then $\R^n$ has an
+	orthonormal basis coming from eigenvectors of $M$. 
+\end{thm}
+
+\begin{cor}
+	Every eigenvalue and eigenvector of a real symmetric matrix are real.
+\end{cor}
+
+In particular, the~\nameref{thm:spectral-thm} makes principal component analysis
+possible since the covariance matrix is always a real symmetric matrix. 
+
+\begin{remark}
+	Covariance matrices are examples of \textit{positive semi-definite
+	matrices}, which are real matrices whose eigenvalues are all real and
+	nonnegative. We will not need this much, nor will we prove this, but it
+	might be useful to know that covariance matrices are particularly nice.
+\end{remark}
+
+Let's unpack what the \nameref{thm:spectral-thm} says exactly. Recall that an
+orthonormal basis $\{b_1, \dots, b_n\}$ for a vector space $V$ satisfies 
+\begin{align*}
+	b_i \cdot b_j &= \begin{cases}
+		1 & i = j, \\ 0 & i \neq j. 
+	\end{cases}
+\end{align*}
+There are two components to being an orthonormal basis: the basis vectors are
+pairwise orthogonal and each basis vector has unit length. The latter condition
+is not so particularly important (though useful); really, the magic is in the
+pairwise orthogonal condition. 
+
+We already saw in Section 3.3 that the \nameref{thm:spectral-thm}
+does not hold if we drop `symmetric'. Now we will build our way to prove the
+\nameref{thm:spectral-thm}. 
+
+\begin{lem}\label{lem:distinct-ortho}
+	Let $M$ be a real symmetric matrix. Then eigenvectors corresponding to
+	distinct eigenvalues are orthogonal. 
+\end{lem}
+
+\begin{proof}
+	Let $u$ and $v$ be eigenvectors of $M$ corresponding to $\lambda$ and $\mu$
+	with $\lambda\neq \mu$. Then 
+	\begin{align*}
+		\mu u^{\tr} v = u^{\tr}(M v) = (u^{\tr}M)v = (Mu)^{\tr}v = \lambda u^{\tr}v. 
+	\end{align*}
+	Suppose via contradiction that $u^{\tr} v \neq 0$, but then $\mu=\lambda$,
+	which is a contradiction, so we must have $u^{\tr} v = 0$. Hence, $u$ and
+	$v$ are orthogonal.
+\end{proof}
+
+\end{document}
