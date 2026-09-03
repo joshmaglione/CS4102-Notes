@@ -387,187 +387,185 @@ If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 	(Round $b_0$ and $b_1$ to the nearest half integer.)
 \end{enumerate}
 
-\WEEK{1}
 
+% \subsection{Plane of best fit}
 
-\subsection{Plane of best fit}
+% We consider two independent variables and one dependent variable now. Consider
+% the following data points as given in \Cref{fig:3d-data-points}.
 
-We consider two independent variables and one dependent variable now. Consider
-the following data points as given in \Cref{fig:3d-data-points}.
+% \begin{figure}[h]
+% 	\centering
+% 	\begin{minipage}{0.3\textwidth}
+% 		\centering 
+% 		\begin{tabular}{cccc}
+% 			$i$ & $x_{i1}$ & $x_{i2}$ & $y_i$ \\ \hline
+% 			0 & 278 & 36 & 287 \\
+% 			1 & 252 & 31 & 256 \\
+% 			2 & 344 & 35 & 300 \\
+% 			3 & 134 & 33 & 182 \\
+% 			4 & 215 & 35 & 248 \\
+% 			5 & 261 & 40 & 271 \\
+% 			6 & 131 & 39 & 149 \\
+% 			7 & 463 & 43 & 411 \\
+% 			8 & 167 & 46 & 214 \\
+% 			9 & 298 & 42 & 291 \\
+% 			10 & 230 & 60 & 314 \\
+% 			11 & 293 & 67 & 352 \\
+% 			12 & 290 & 37 & 298 \\
+% 			13 & 271 & 31 & 252 \\
+% 			14 & 385 & 63 & 439 \\
+% 			15 & 354 & 36 & 328
+% 		\end{tabular}
+% 	\end{minipage}~%
+% 	\begin{minipage}{0.6\textwidth}
+% 		\begin{tikzpicture}
+% 			\begin{axis}[
+% 				view={20}{20}, % Set the view angle
+% 				xlabel=$x_{i1}$,
+% 				ylabel=$x_{i2}$,
+% 				zlabel=$y_i$,
+% 				grid=major,
+% 			]
+% 			% Scatter plot data points
+% 			\addplot3[
+% 				only marks,
+% 				mark=ball,
+% 				mark size=2.5,
+% 			]
+% 			coordinates {
+% 				(278, 36, 287)
+% 				(252, 31, 256)
+% 				(344, 35, 300)
+% 				(134, 33, 182)
+% 				(215, 35, 248)
+% 				(261, 40, 271)
+% 				(131, 39, 149)
+% 				(463, 43, 411)
+% 				(167, 46, 214)
+% 				(298, 42, 291)
+% 				(230, 60, 314)
+% 				(293, 67, 352)
+% 				(290, 37, 298)
+% 				(271, 31, 252)
+% 				(385, 63, 439)
+% 				(354, 36, 328)
+% 			};
+% 			% % Define the equation of the plane: ax + by + cz + d = 0
+% 			% \addplot3[
+% 			% 	surf,
+% 			% 	opacity=0.5,
+% 			% 	faceted color=blue,
+% 			% 	shader=interp,
+% 			% 	domain=200:400,
+% 			% 	domain y=20:60,
+% 			% ] {0.7*x + 2.6*y - 11.3};
+% 			\end{axis}
+% 		\end{tikzpicture}
+% 	\end{minipage}	
+% 	\caption{Data points in $\R^3$.}
+% 	\label{fig:3d-data-points}
+% \end{figure}
 
-\begin{figure}[h]
-	\centering
-	\begin{minipage}{0.3\textwidth}
-		\centering 
-		\begin{tabular}{cccc}
-			$i$ & $x_{i1}$ & $x_{i2}$ & $y_i$ \\ \hline
-			0 & 278 & 36 & 287 \\
-			1 & 252 & 31 & 256 \\
-			2 & 344 & 35 & 300 \\
-			3 & 134 & 33 & 182 \\
-			4 & 215 & 35 & 248 \\
-			5 & 261 & 40 & 271 \\
-			6 & 131 & 39 & 149 \\
-			7 & 463 & 43 & 411 \\
-			8 & 167 & 46 & 214 \\
-			9 & 298 & 42 & 291 \\
-			10 & 230 & 60 & 314 \\
-			11 & 293 & 67 & 352 \\
-			12 & 290 & 37 & 298 \\
-			13 & 271 & 31 & 252 \\
-			14 & 385 & 63 & 439 \\
-			15 & 354 & 36 & 328
-		\end{tabular}
-	\end{minipage}~%
-	\begin{minipage}{0.6\textwidth}
-		\begin{tikzpicture}
-			\begin{axis}[
-				view={20}{20}, % Set the view angle
-				xlabel=$x_{i1}$,
-				ylabel=$x_{i2}$,
-				zlabel=$y_i$,
-				grid=major,
-			]
-			% Scatter plot data points
-			\addplot3[
-				only marks,
-				mark=ball,
-				mark size=2.5,
-			]
-			coordinates {
-				(278, 36, 287)
-				(252, 31, 256)
-				(344, 35, 300)
-				(134, 33, 182)
-				(215, 35, 248)
-				(261, 40, 271)
-				(131, 39, 149)
-				(463, 43, 411)
-				(167, 46, 214)
-				(298, 42, 291)
-				(230, 60, 314)
-				(293, 67, 352)
-				(290, 37, 298)
-				(271, 31, 252)
-				(385, 63, 439)
-				(354, 36, 328)
-			};
-			% % Define the equation of the plane: ax + by + cz + d = 0
-			% \addplot3[
-			% 	surf,
-			% 	opacity=0.5,
-			% 	faceted color=blue,
-			% 	shader=interp,
-			% 	domain=200:400,
-			% 	domain y=20:60,
-			% ] {0.7*x + 2.6*y - 11.3};
-			\end{axis}
-		\end{tikzpicture}
-	\end{minipage}	
-	\caption{Data points in $\R^3$.}
-	\label{fig:3d-data-points}
-\end{figure}
+% We can put some meaning to these data. For example, suppose a company is selling
+% a product, and we have 16 populations of people labeled $0$ through $15$. The
+% values $x_{i1}$ are the population sizes in $100$s of people; the values
+% $x_{i2}$ are the average yearly income in €$1000$ per capita; and the values
+% $y_i$ are the number of sales of the product. (There might be dependencies
+% between population size and average income, but our model treats them as
+% independent.)
 
-We can put some meaning to these data. For example, suppose a company is selling
-a product, and we have 16 populations of people labeled $0$ through $15$. The
-values $x_{i1}$ are the population sizes in $100$s of people; the values
-$x_{i2}$ are the average yearly income in €$1000$ per capita; and the values
-$y_i$ are the number of sales of the product. (There might be dependencies
-between population size and average income, but our model treats them as
-independent.)
+% It looks like though there is a plane of best fit for the data---thanks to the
+% suggestive viewing angle. Our goal is to find a plane, given by 
+% \begin{align*} 
+% 	y = b_0 + b_1x_1 + b_2x_2. 
+% \end{align*} 
+% We can just do what we did last time. That is, for 
+% \begin{align*}
+% 	X &= \begin{pmatrix}
+% 		1 & x_{11} & x_{12} \\ 
+% 		1 & x_{21} & x_{22} \\
+% 		\vdots & \vdots & \vdots \\
+% 		1 & x_{n1} & x_{n2} 
+% 	\end{pmatrix}, & 
+% 	Y &= \begin{pmatrix}
+% 		y_1 \\ y_2 \\ \vdots \\ y_n
+% 	\end{pmatrix}, & 
+% 	B &= \begin{pmatrix}
+% 		b_0 \\ b_1 \\ b_2
+% 	\end{pmatrix},
+% \end{align*}
+% we need to solve for $B$ in the equation
+% \begin{align*}
+% 	X^{\tr} X B &= X^{\tr} Y .	
+% \end{align*}
+% Thus, if $X^{\tr}X$ is invertible, there is a unique $B$, which is equal to
+% $(X^{\tr}X)^{-1}X^{\tr}Y$. For our example, we have 
+% \begin{align*}
+% 	X^{\tr}X &= \begin{pmatrix}
+% 		16 &    4366 &     674 \\
+% 		4366 & 1309480 &  187024 \\
+% 		674 &  187024 &   30330
+% 	\end{pmatrix}, & 
+% 	X^{\tr}Y &= \begin{pmatrix}
+% 		4592 \\
+% 		1343400 \\
+% 		200571
+% 	\end{pmatrix}.
+% \end{align*}
+% Therefore, the plane of best fit is approximately
+% \begin{align*}
+% 	y &= -11.3 + 0.7x_1 + 2.6x_2.
+% \end{align*}
+% Putting all the data together we have a plane of best fit as seen in
+% \Cref{fig:plane-and-scatter}.
 
-It looks like though there is a plane of best fit for the data---thanks to the
-suggestive viewing angle. Our goal is to find a plane, given by 
-\begin{align*} 
-	y = b_0 + b_1x_1 + b_2x_2. 
-\end{align*} 
-We can just do what we did last time. That is, for 
-\begin{align*}
-	X &= \begin{pmatrix}
-		1 & x_{11} & x_{12} \\ 
-		1 & x_{21} & x_{22} \\
-		\vdots & \vdots & \vdots \\
-		1 & x_{n1} & x_{n2} 
-	\end{pmatrix}, & 
-	Y &= \begin{pmatrix}
-		y_1 \\ y_2 \\ \vdots \\ y_n
-	\end{pmatrix}, & 
-	B &= \begin{pmatrix}
-		b_0 \\ b_1 \\ b_2
-	\end{pmatrix},
-\end{align*}
-we need to solve for $B$ in the equation
-\begin{align*}
-	X^{\tr} X B &= X^{\tr} Y .	
-\end{align*}
-Thus, if $X^{\tr}X$ is invertible, there is a unique $B$, which is equal to
-$(X^{\tr}X)^{-1}X^{\tr}Y$. For our example, we have 
-\begin{align*}
-	X^{\tr}X &= \begin{pmatrix}
-		16 &    4366 &     674 \\
-		4366 & 1309480 &  187024 \\
-		674 &  187024 &   30330
-	\end{pmatrix}, & 
-	X^{\tr}Y &= \begin{pmatrix}
-		4592 \\
-		1343400 \\
-		200571
-	\end{pmatrix}.
-\end{align*}
-Therefore, the plane of best fit is approximately
-\begin{align*}
-	y &= -11.3 + 0.7x_1 + 2.6x_2.
-\end{align*}
-Putting all the data together we have a plane of best fit as seen in
-\Cref{fig:plane-and-scatter}.
-
-\begin{figure}[h]
-	\centering
-	\begin{tikzpicture}
-		\begin{axis}[
-			view={10}{20}, % Set the view angle
-			xlabel=$x_{i1}$,
-			ylabel=$x_{i2}$,
-			zlabel=$y_i$,
-			grid=major,
-		]
-		% Scatter plot data points
-		\addplot3[
-			only marks,
-			mark=ball,
-			mark size=2.5,
-		]
-		coordinates {
-			% (278, 36, 287)
-			% (252, 31, 256)
-			(344, 35, 300)
-			% (134, 33, 182)
-			% (215, 35, 248)
-			(261, 40, 271)
-			(131, 39, 149)
-			(463, 43, 411)
-			(167, 46, 214)
-			(298, 42, 291)
-			% (230, 60, 314)
-			(293, 67, 352)
-			% (290, 37, 298)
-			(271, 31, 252)
-			% (385, 63, 439)
-			(354, 36, 328)
-		};
-		% Define the equation of the plane: ax + by + cz + d = 0
-		\addplot3[
-			surf,
-			opacity=1,
-			shader=interp,
-			domain=150:450,
-			domain y=20:60,
-		] {0.7*x + 2.6*y - 11.3};
-		\end{axis}
-	\end{tikzpicture}
-	\caption{Data points together with the plane of best fit.}
-	\label{fig:plane-and-scatter}
-\end{figure}
+% \begin{figure}[h]
+% 	\centering
+% 	\begin{tikzpicture}
+% 		\begin{axis}[
+% 			view={10}{20}, % Set the view angle
+% 			xlabel=$x_{i1}$,
+% 			ylabel=$x_{i2}$,
+% 			zlabel=$y_i$,
+% 			grid=major,
+% 		]
+% 		% Scatter plot data points
+% 		\addplot3[
+% 			only marks,
+% 			mark=ball,
+% 			mark size=2.5,
+% 		]
+% 		coordinates {
+% 			% (278, 36, 287)
+% 			% (252, 31, 256)
+% 			(344, 35, 300)
+% 			% (134, 33, 182)
+% 			% (215, 35, 248)
+% 			(261, 40, 271)
+% 			(131, 39, 149)
+% 			(463, 43, 411)
+% 			(167, 46, 214)
+% 			(298, 42, 291)
+% 			% (230, 60, 314)
+% 			(293, 67, 352)
+% 			% (290, 37, 298)
+% 			(271, 31, 252)
+% 			% (385, 63, 439)
+% 			(354, 36, 328)
+% 		};
+% 		% Define the equation of the plane: ax + by + cz + d = 0
+% 		\addplot3[
+% 			surf,
+% 			opacity=1,
+% 			shader=interp,
+% 			domain=150:450,
+% 			domain y=20:60,
+% 		] {0.7*x + 2.6*y - 11.3};
+% 		\end{axis}
+% 	\end{tikzpicture}
+% 	\caption{Data points together with the plane of best fit.}
+% 	\label{fig:plane-and-scatter}
+% \end{figure}
 
 \subsection{Hyperplane of best fit}
 
@@ -648,8 +646,6 @@ which is a sum of \textit{squares}.
 		X^{\tr} X B = X^{\tr} Y.
 	\] 
 \end{prop}
-
-\WEEK{2}
 
 \begin{proof} 
 	Consider the subspace $U = \{Xu ~|~ u\in\R^p\}$ of $\R^n$, and observe that
@@ -781,7 +777,7 @@ questions arise:
 	our line? 
 \end{itemize}
 
-\WEEK{3}
+% \WEEK{3}
 
 \subsection{Coefficient of determination ($R^2$ values)}
 
@@ -1012,7 +1008,7 @@ have low redundancy.) One of the aims of PCA is to lower redundancy. For the
 $2$-dimensional case, this is simple---take the line of best fit, but for
 arbitrarily higher dimensions, this is not obvious. 
 
-\WEEK{4}
+% \WEEK{4}
 
 
 Suppose we have $n$ measurements of the same kind (like length)
@@ -1194,7 +1190,7 @@ distance preserving is equivalent to $P^{\tr}P = I_m$, but these matrices are
 called \textbf{orthogonal}. (Note: pairs of distinct columns of such a matrix
 $P$ are pairwise orthogonal. Can you prove this?!) 
 
-\WEEK{5}
+% \WEEK{5}
 
 Let us bring this back to the equation we established. We want $P$ to be an
 orthogonal matrix such that 
@@ -1426,7 +1422,7 @@ If $z\in \C$, then $\overline{z} = z$ if and only if $z\in \R$.
 It follows from \Cref{prop:real-evals} that all eigenvectors of a real symmetric
 matrix are real, but we still want more---namely orthogonality.
 
-\WEEK{6}
+% \WEEK{6}
 
 \begin{defn}
 	Let $M$ be an $n\times n$ matrix with entries in a field $K$. A subspace $U$
