@@ -137,7 +137,7 @@ formulas.
 
 \subsection{Build up}\label{sec:build-up}
 
-Suppose we have the following data as seen in \Cref{fig:2d-linear-data}. (Maybe
+Suppose we have the following data as seen in Figure~\ref{fig:2d-linear-data}. (Maybe
 a company produces parts once per month in lots that vary in size depending on
 demand. We write $i$ for the production run, $x_i$ for the lot size, and $y_i$
 for the hours of labor.) 
@@ -196,7 +196,7 @@ for the hours of labor.)
 
 It seems clear from the plot that the data fits a geometric pattern---there is a
 linear phenomenon. If we try to find the line that is somehow closest to all the
-data points, we might draw something like in \Cref{fig:2d-linear-data-line}. 
+data points, we might draw something like in Figure~\ref{fig:2d-linear-data-line}. 
 
 \begin{figure}[h] 
 	\centering
@@ -275,7 +275,7 @@ $b_0$ and $b_1$:
 	\end{split}
 \end{equation}
 
-Using the data from our example in \Cref{sec:build-up}, we have 
+Using the data from our example in Section~\ref{sec:build-up}, we have 
 \begin{align*}
 	\sum x_i &= 500, & 
 	\sum y_i &= 1100, & 
@@ -322,7 +322,7 @@ If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 \begin{enumerate}
 	\item 
 	\begin{enumerate} 
-		\item With $X$, $Y$, and $B$ as defined in \Cref{eqn:X-Y-B}, show that 
+		\item With $X$, $Y$, and $B$ as defined in \eqref{eqn:X-Y-B}, show that 
 		\begin{align*}
 			X^\tr X &= \begin{pmatrix}
 				n & \sum x_i \\ \sum x_i & \sum x_i^2
@@ -332,7 +332,7 @@ If $X^{\tr} X$ is invertible, then $B = (X^{\tr}X)^{-1}X^{\tr}Y$.
 			\end{pmatrix}. 
 		\end{align*}
 		\item Show that $X^\tr XB = X^\tr Y$ is equivalent to
-		\Cref{eqn:least-squares-line}:
+		\eqref{eqn:least-squares-line}:
 		\begin{align*}
 			nb_0 + b_1\sum x_i &= \sum y_i, \\
 			b_0 \sum x_i + b_1 \sum x_i^2 &= \sum x_iy_i.
@@ -599,7 +599,7 @@ As before, the values we want are given by the equation
 	X^{\tr} X B &= X^{\tr} Y.
 \end{align}
 
-\subsection{Why \Cref{eqn:general-OLS} works}
+\subsection{Why Equation~\eqref{eqn:general-OLS} works}
 
 The heart of least squares is (Euclidean) distance. The distance between two points $x = (x_1,\dots, x_p)$ and $y=(y_1,\dots, y_p)$ in $\R^p$ is 
 \begin{align*}
@@ -641,7 +641,7 @@ Hence minimizing $\| Y - XB \|$ is the same as minimizing $\| Y - XB \|^2$,
 which is a sum of \textit{squares}.
 
 \begin{prop}
-	The minimal distance $\| Y - XB \|$ is achieved by solving for $B$ in 
+	The minimal distance $\| Y - XB \|$ is achieved when
 	\[ 
 		X^{\tr} X B = X^{\tr} Y.
 	\] 
@@ -696,7 +696,7 @@ tried to fit
 	y = b_0 + b_1x_1 + b_2x_2 + \cdots + b_{p-1}x_{p-1}.
 \] 
 
-Suppose we have the following data as given in \Cref{fig:nonlinear-data}.
+Suppose we have the following data as given in Figure~\ref{fig:nonlinear-data}.
 Instead of trying to fit the line $y=b_0+b_1x$, we could try to fit the
 parabola: 
 \[ 
@@ -782,7 +782,7 @@ questions arise:
 \subsection{Coefficient of determination ($R^2$ values)}
 
 We are going to make precise how well our hyperplane fits our data. Recall that
-hyperplanes can be replaced by hypersurfaces; see \Cref{sec:nonlinear-fittings}.
+hyperplanes can be replaced by hypersurfaces; see Section~\ref{sec:nonlinear-fittings}.
 First we establish some notation. Suppose we have $n$ data points $(x_{i1},
 x_{i2}, \dots, x_{i,p-1}, y_i)\in \R^p$. Then we define  
 \begin{align*}
@@ -812,7 +812,7 @@ like? If it is a triangle (and not a line or a single point), then the next
 lemma proves it must be a right triangle.
 
 \begin{lem}\label{lem:orthog}
-	The vectors $E = Y - \widehat{Y}$ and $\widehat{Y}-\overline{Y}$ are
+	If $X^{\tr}XB = X^{\tr}Y$, then $E = Y - \widehat{Y}$ and $\widehat{Y}-\overline{Y}$ are
 	orthogonal.
 \end{lem}
 
@@ -828,7 +828,7 @@ lemma proves it must be a right triangle.
 		&= \overline{y} \sum_{i=1}^n (y_i - (b_0+b_1x_{i1} + b_2x_{i2} + \cdots + b_{p-1}x_{i,p-1})) \\
 		&= -\dfrac{\overline{y}}{2} \cdot \dfrac{\partial S}{\partial b_0} = 0,
 	\end{align*}
-	where $S$ is defined in \Cref{eqn:S-function}, so $\overline{Y}^{\tr}E=0$.
+	where $S$ is defined in \eqref{eqn:S-function}, so $\overline{Y}^{\tr}E=0$.
 	Thus, we have 
 	\begin{align*}
 		(\widehat{Y} - \overline{Y}) \cdot E &= (XB)^{\tr} E - \overline{Y}^{\tr}E = 0. \qedhere
@@ -836,7 +836,7 @@ lemma proves it must be a right triangle.
 \end{proof}
 
 \begin{remark}
-	One can simplify the proof for \Cref{lem:orthog} by applying an isometry to
+	One can simplify the proof for Lemma~\ref{lem:orthog} by applying an isometry to
 	the data, so that $\overline{y} = 0$. That is, one only needs to prove that
 	$E$ and $\widehat{Y}$ are orthogonal.
 \end{remark}
@@ -860,7 +860,7 @@ our regression to the sample mean.
 \end{prop}
 
 \begin{proof}
-	Apply \Cref{lem:orthog} and the Pythagorean Theorem:
+	Apply Lemma~\ref{lem:orthog} and the Pythagorean Theorem:
 	\begin{align*} 
 		\| Y - \overline{Y} \|^2 &= \| Y - \widehat{Y}\|^2 + \| \widehat{Y} - \overline{Y} \|^2.  \qedhere
 	\end{align*} 
@@ -882,8 +882,8 @@ given data.
 \end{prop}
 
 \begin{proof}
-	Since each SST and SSR are squares, they are nonnegative. By
-	\Cref{prop:SS-values}, we have $0\leq SSR\leq SST$.
+	Since each SST and SSR are squares, they are non-negative. By
+	Proposition~\ref{prop:SS-values}, we have $0\leq SSR\leq SST$.
 \end{proof}
 
 \subsubsection{What do the extremes means?}
@@ -942,7 +942,7 @@ reference frame.
 \subsection{Introducing PCA}
 
 We will start with a toy example, where the analysis is quite simple. Suppose we
-have many many data points in $\R^2$ as seen in \Cref{fig:pca-example}.
+have many many data points in $\R^2$ as seen in Figure~\ref{fig:pca-example}.
 
 \begin{figure}[h]
     \centering
@@ -952,7 +952,7 @@ have many many data points in $\R^2$ as seen in \Cref{fig:pca-example}.
 \end{figure}
 
 Let's assume that our data points live in $\R^m$, so that $m=2$ in
-\Cref{fig:pca-example}. Suppose we write those data points in an $m\times n$
+Figure~\ref{fig:pca-example}. Suppose we write those data points in an $m\times n$
 matrix $X$. Our current (and default) basis is $\{(1,0, \dots, 0), (0,1, 0,
 \dots, 0), \dots, (0,\dots, 0,1)\}$, and we want a basis $\{p_1,p_2, \dots,
 p_m\}$ that better reflects the structure of our data. That is, we want an
@@ -983,12 +983,12 @@ Thus, if the columns of $Y$ are written $y_i$, we have
 	\end{pmatrix}. 
 \end{align}
 
-Back to our example from \Cref{fig:pca-example}. We want data with a high
+Back to our example from Figure~\ref{fig:pca-example}. We want data with a high
 \textit{signal-to-noise} (SNR) ratio as to minimize noise. Assuming our data in
-\Cref{fig:pca-example} was collected reasonably well, the direction of largest
+Figure~\ref{fig:pca-example} was collected reasonably well, the direction of largest
 variance is the direction of most interesting dynamics. Therefore, the variance
 of signal, $\sigma_{\mathrm{s}}^2$, would correspond to the length of the
-orange vector in \cref{fig:pca-example2} pointing to the top right, and the
+orange vector in Figure~\ref{fig:pca-example2} pointing to the top right, and the
 variance of the noise, $\sigma_{\mathrm{n}}^2$, would correspond to the length
 of the orange vector pointing to the top left. 
 
@@ -999,7 +999,7 @@ of the orange vector pointing to the top left.
 	\label{fig:pca-example2}
 \end{figure}
 
-Note also that in \Cref{fig:pca-example2} knowing the $x$ value gives one a good
+Note also that in Figure~\ref{fig:pca-example2} knowing the $x$ value gives one a good
 approximation for the $y$ value and vice versa. In this case, we might say that
 the data has a moderate amount of redundancy, whereas if the data points had a
 much higher $R^2$ value to its line of best fit, we would say the data have high
@@ -1047,7 +1047,7 @@ measurements of a particular trial. In other words, our data points are the
 columns of $X$, and each entry of a data point is a measurement of a particular
 type. 
 
-Using \Cref{eqn:vec-covar}, we define the
+Using \eqref{eqn:vec-covar}, we define the
 \textbf{covariance matrix} of $X$ to be 
 \begin{align*} 
 	C_X &= \dfrac{1}{n} XX^{\tr} .
@@ -1100,7 +1100,7 @@ passes through the point $(0,0)$. By rotating and permuting, we get
 		0.40 & 0.92 \\ 0.92 & -0.40 
 	\end{pmatrix},
 \end{align*}
-and the graph of the data $Y = PX$ is seen in \Cref{fig:pca-example3}.
+and the graph of the data $Y = PX$ is seen in Figure~\ref{fig:pca-example3}.
 
 \begin{figure}[h]
     \centering
@@ -1160,7 +1160,7 @@ necessarily hold for a particular data set.
 \subsection{Performing PCA}\label{sec:perform-pca}
 
 At the heart of performing PCA in practice is the following question. Recall
-that $C_Y$ is a diagonal matrix; see the discussion around \Cref{eqn:cov-Y}.
+that $C_Y$ is a diagonal matrix; see the discussion around \eqref{eqn:cov-Y}.
 
 \begin{quest} 
 	What is the relationship between $C_X$ and $C_Y$ if $Y = PX$? 
@@ -1180,7 +1180,7 @@ to be \textit{distance preserving}; that is, we want $P$ to satisfy
 	\| Pv \| &= \| v\|
 \end{align}
 for all vectors $v\in\R^m$. We say such a matrix $P$ is an \textbf{isometry}. We
-can take \Cref{eqn:dist-preserve} and massage it, so that $P$ must satisfy 
+can take \eqref{eqn:dist-preserve} and massage it, so that $P$ must satisfy 
 \begin{align*}
 	v^{\tr} P^{\tr} P v &= (Pv)\cdot (Pv) = v\cdot v = v^{\tr} v
 \end{align*}
@@ -1215,10 +1215,10 @@ complex eigenvalues. For example, the matrix
 \end{align*}
 has eigenvalues $i$ and $-i$, for $i=\sqrt{-1}$. 
 \begin{quest}\label{quest:PCA-possible}
-	Is it always possible to find a real matrix $P$ such that \Cref{eqn:CY-CX}
+	Is it always possible to find a real matrix $P$ such that \eqref{eqn:CY-CX}
 	holds?
 \end{quest}
-The answer to \Cref{quest:PCA-possible} is ``Yes,'' and we will prove it later.
+The answer to Question~\ref{quest:PCA-possible} is ``Yes,'' and we will prove it later.
 For now, let us assume it is always possible. 
 
 \medskip
@@ -1248,7 +1248,7 @@ both $C_X$ and $C_Y$ have the same trace. In other words,
 \begin{align*}
 	\mathrm{tr}(C_X) &= \sum_{i=1}^m \lambda_i,
 \end{align*}
-and by \Cref{lem:covariance-properties}, the sum of the variances is the sum of
+and by Lemma~\ref{lem:covariance-properties}, the sum of the variances is the sum of
 the eigenvalues. Because we view variability as an important measurement to keep
 track of, we can choose a $k$ that both maximizes the amount of variability
 ``seen'' and while minimizing the value of $k$. This is a bit more of an art
@@ -1266,7 +1266,7 @@ $95\%$ of the total variability.
 
 \subsection{Projections}
 
-The answer to \Cref{quest:small-PC} is essentially ``Yes'', and it can be
+The answer to Question~\ref{quest:small-PC} is essentially ``Yes'', and it can be
 helpful to consider an idealised example. 
 
 Recall that $X$ is our $m\times n$ matrix whose columns are our $n$ data points
@@ -1305,7 +1305,7 @@ Therefore, we have
 \begin{proof} 
 	For each column $x_i$ of $X$, we have $Px_i = y_i$, where $y_i$ is the $i$th
 	column of $Y$. Since $P$ is orthogonal, $d_{\R^m}(Px_i, Px_j)= d_{\R^m}(x_i,
-	x_j)$. Thus, by \Cref{rem:tail-zeroes}
+	x_j)$. Thus, by Remark~\ref{rem:tail-zeroes}
 	\begin{align*}
 		d_{\R^m}(Px_i, Px_j)^2 &= d_{\R^m}(y_i, y_j)^2 \\
 		&= \sum_{r=1}^m (y_{ri} - y_{rj})^2 \\
@@ -1314,13 +1314,13 @@ Therefore, we have
 	\end{align*}
 \end{proof}
 
-The key application of \Cref{lem:projection} is that ignoring rows $k+1$ through
+The key application of Lemma~\ref{lem:projection} is that ignoring rows $k+1$ through
 $m$ in the matrix $P$ does not change the geometry! That is, we can project the
 data to a smaller dimension and distances between the data points remain
 unchanged! 
 
 In practice the $\lambda_i$ are strictly greater than $0$, so this idealised
-situation does not occur. Using our rule in \Cref{eqn:k-rule}, then the
+situation does not occur. Using our rule in \eqref{eqn:k-rule}, then the
 projected data would approximate the original geometry quite well. The larger
 the ratio, the better the approximation, so there is indeed a trade off. Thus,
 after constructing all of the principal components, one can take the first $k$,
@@ -1332,7 +1332,7 @@ constructing the matrix $Q$ from the first $k$ rows of $P$.
 The real power of PCA is that we can \textit{always} perform it. One does not
 need to input parameters; just the data. Note there is a pre-processing stage of
 normalising and rescaling, but this can be applied to all data. We address
-\Cref{quest:PCA-possible} which, at the time, we just assumed was true. In order
+Question~\ref{quest:PCA-possible} which, at the time, we just assumed was true. In order
 to do this, we prove the Spectral Theorem.
 
 \begin{thm}[Spectral Theorem]\label{thm:spectral-thm}
@@ -1366,7 +1366,7 @@ pairwise orthogonal and each basis vector has unit length. The latter condition
 is not so particularly important (though useful); really, the magic is in the
 pairwise orthogonal condition. 
 
-We already saw in \Cref{sec:perform-pca} that the \nameref{thm:spectral-thm}
+We already saw in Section~\ref{sec:perform-pca} that the \nameref{thm:spectral-thm}
 does not hold if we drop `symmetric'. Now we will build our way to prove the
 \nameref{thm:spectral-thm}. 
 
@@ -1386,7 +1386,7 @@ does not hold if we drop `symmetric'. Now we will build our way to prove the
 	$v$ are orthogonal.
 \end{proof}
 
-From \Cref{lem:distinct-ortho}, we can already prove that all eigenvalues (and
+From Lemma~\ref{lem:distinct-ortho}, we can already prove that all eigenvalues (and
 therefore) all eigenvectors are real. Before we dive into that proof, recall the
 operation of \textit{complex conjugation}. If $a,b\in \R$, then $a + bi$ is a
 complex number, and the complex conjugate is 
@@ -1415,11 +1415,11 @@ If $z\in \C$, then $\overline{z} = z$ if and only if $z\in \R$.
 	\end{align*}
 	Thus, $v$ and $\overline{v}$ are not orthogonal, but $\lambda\neq
 	\overline{\lambda}$, so we get a contradiction thanks to
-	\Cref{lem:distinct-ortho}. Therefore, $\lambda\in\R$, and hence all
+	Lemma~\ref{lem:distinct-ortho}. Therefore, $\lambda\in\R$, and hence all
 	eigenvalues of $M$ are real. 
 \end{proof}
 
-It follows from \Cref{prop:real-evals} that all eigenvectors of a real symmetric
+It follows from Proposition~\ref{prop:real-evals} that all eigenvectors of a real symmetric
 matrix are real, but we still want more---namely orthogonality.
 
 % \WEEK{6}
@@ -1462,7 +1462,7 @@ is a subspace of $V$.
 		MQ = QN. 
 	\end{align*}
 	Since $QQ^{\tr} = I_m$, we have $Q^{\tr}MQ = N$. Because $M$ is symmetric,
-	so is $N$. By \Cref{prop:real-evals}, all the eigenvalues of $N$ are real,
+	so is $N$. By Proposition~\ref{prop:real-evals}, all the eigenvalues of $N$ are real,
 	and since $m\geq 1$, let $0\neq v\in\R^m$ such that $Nv=\lambda v$ for some
 	$\lambda\in \R$. Hence, 
 	\[ 
@@ -1478,10 +1478,10 @@ is a subspace of $V$.
 	prove, so we assume that the statement of the theorem holds for $n$. We will
 	show that it holds for $n+1$.
 
-	Let $v$ be an eigenvector of $M$, which is real by \Cref{prop:real-evals}.
+	Let $v$ be an eigenvector of $M$, which is real by Proposition~\ref{prop:real-evals}.
 	Let $U$ be the subspace of $\R^{n+1}$ that is orthogonal to $v$, so $\dim(U)
 	= n$. Since the span of $v$ is $M$-invariant, so is $U$ by
-	\Cref{lem:perp-inv}. By \Cref{lem:eigenvector}, $U$ contains a real
+	Lemma~\ref{lem:perp-inv}. By Lemma~\ref{lem:eigenvector}, $U$ contains a real
 	eigenvector of $M$. By iterating this argument, $U$ contains all other
 	eigenvectors of $M$. Hence, by induction, the statement holds. 
 \end{proof}
@@ -1582,7 +1582,7 @@ or cluster analysis is a generic term for algorithms designed to partition a
 given data into clusters. Clusters is a word that does not really have a precise
 meaning, and its meaning might even depend on situation, but generally we
 intuitively understand that clusters are groups of data points as seen in
-\Cref{fig:clusters}.
+Figure~\ref{fig:clusters}.
 
 \begin{figure}
 	\centering 
@@ -1621,7 +1621,7 @@ the data like the following.
 ``Populations'' presupposes a certain perspective that need not be true. For
 example, clustering algorithms are used on gene sequences in medicine and
 biological sciences. See for example the hierarchical clustering done on
-sequences of genes for breast cancer in \Cref{fig:clustering-genes}.
+sequences of genes for breast cancer in Figure~\ref{fig:clustering-genes}.
 
 \begin{figure}[h]
 	\centering
@@ -1681,16 +1681,16 @@ the different colours with exactly $k$ colours---essentially compressing the
 image. 
 
 Let's see how this might look on one of my photos. Meet my dog, Sherlock; he is
-depicted in \Cref{fig:sherlock}. There is not very many colours in the image, so
+depicted in Figure~\ref{fig:sherlock}. There is not very many colours in the image, so
 we should expect that low values of $k$ will produce an image that looks fairly
 similar. Running a $k$-means clustering for each $k\in \{2,\dots, 10\}$ yields
-nine different images seen in \Cref{fig:k-means-sherlock}.
+nine different images seen in Figure~\ref{fig:k-means-sherlock}.
 
 \begin{figure}[h]
 	\centering
 	% \vspace{-2em}
 	\includegraphics[scale=0.75]{graphics/k_means_Sherlocks.jpg}
-	\caption{$k$-means clustering on the image in \Cref{fig:sherlock}.}
+	\caption{$k$-means clustering on the image in Figure~\ref{fig:sherlock}.}
 	\label{fig:k-means-sherlock}
 \end{figure}
 
@@ -1701,7 +1701,7 @@ pseudo-code to give the details of the algorithm; this is a way of giving the
 idea of the structure of the code without diving into the specifics of any
 particular language. 
 
-We provide pseudo-code for a basic $k$-means algorithm in \Cref{alg:k-means}.
+We provide pseudo-code for a basic $k$-means algorithm in Algorithm~\ref{alg:k-means}.
 The algorithm returns a function $\Lambda : \{1,\dots, n\} \to \{1,\dots, k\}$,
 which can be interpreted as a label for the $n$ data points. The algorithm
 accomplishes this by randomly choosing the $k$ centroids, and then clustering
@@ -1729,7 +1729,7 @@ given cluster to be the new centroid.
 	\end{algorithmic}
 \end{algorithm}
 
-In the first step of $k$-means (see line 1 in \Cref{alg:k-means}), we randomly
+In the first step of $k$-means (see line 1 in Algorithm~\ref{alg:k-means}), we randomly
 assign the $k$ centroids. For different initial assignments, one can get
 different outputs. This is like trying to find global extrema on a ``bumpy''
 graph by starting at a random point on the graph and then looking for the
@@ -1739,7 +1739,7 @@ their specific data at hand.
 
 \subsection{A small example with $k$-means}
 
-We will consider 40 points in $\R^2$, which can be seen in \Cref{fig:4-means},
+We will consider 40 points in $\R^2$, which can be seen in Figure~\ref{fig:4-means},
 and we will look for $4$ clusters. You might try to see how you would cluster
 the data. 
 
@@ -1754,9 +1754,9 @@ We will randomly select four data points for our initial centroids, and then we
 will group the data points into the four clusters. We will show this by
 colouring the Voronoi cells different colours and indicating the centroids by
 white crosses. All of the iterations of one $k$-means algorithm can be seen in
-\Cref{fig:4-means-iterations}. Just to illustrate how sensitive $k$-means is to
+Figure~\ref{fig:4-means-iterations}. Just to illustrate how sensitive $k$-means is to
 the initial choice of centroids, we run the algorithm again in
-\Cref{fig:4-means-iterations-alt}.
+Figure~\ref{fig:4-means-iterations-alt}.
 
 
 
@@ -1849,7 +1849,7 @@ hierarchical clustering algorithm. With $k$-means, we need to give the number of
 clusters $k$ in order to run the algorithm. With neighbour joining, we look at
 all the possible clusterings under prescribed conditions by means of a
 \emph{dendrogram}. We have already seen an example of the output of a
-hierarchical clustering algorithm; see \Cref{fig:clustering-genes}.
+hierarchical clustering algorithm; see Figure~\ref{fig:clustering-genes}.
 
 The basic idea of neighbour joining clustering is that every data point is its
 own cluster and under certain conditions, two clusters are merged at each step
@@ -1862,7 +1862,7 @@ Before we look at the algorithm, let's consider a specific application.
 \subsection{An application of hierarchical clustering}
 
 We will look at the study in~\cite{BreastCancer} a little closely; see also
-\Cref{fig:clustering-genes}. People diagnosed with breast cancer can have very
+Figure~\ref{fig:clustering-genes}. People diagnosed with breast cancer can have very
 different clinical outcomes. We do not really know why this is the case, but one
 suggestion might be that our knowledge of the specific breast cancer tumors is
 lacking. Sotiriou et al.~\cite{BreastCancer} propose clustering the tumors by
@@ -1874,7 +1874,7 @@ were able to obtain this partition at the top of the dendrogram---if one cuts it
 so there are exactly two clusters, these align with the two subgroups based on
 estrogen receptors. They were able to further partition the two subgroups based
 on their basal and luminal characteristics. This led to the six clusters
-(represented by different colours) in \Cref{fig:clustering-genes}. This is also
+(represented by different colours) in Figure~\ref{fig:clustering-genes}. This is also
 in line with previous work done by different research teams, and offers more
 evidence that their hypothesis is correct---that breast cancer tumors ought to
 be clustered in the established way.
@@ -1920,7 +1920,7 @@ which will be interpreted as clusters in the actual algorithm.
 In the context of clustering, having a metric is not necessary. For example,
 because $x\mapsto x^2$ is monotonically increasing on the $\R_{\geq 0}$, it
 follows that $d(x,y) < d(u,v)$ if and only if $d_{\square}(x,y) <
-d_{\square}(u,v)$; here we are using the notation from \Cref{lem:semimetrics}.
+d_{\square}(u,v)$; here we are using the notation from Lemma~\ref{lem:semimetrics}.
 Thus, it is irrelevant if we cluster two points based on $d$ or $d_{\square}$,
 so we allow our distance functions to come from semimetrics. 
 
@@ -1956,9 +1956,9 @@ corresponds to neighbour joining with the complete-linkage metric. One could
 design a metric that might be most relevant for the particular data set at hand.
 
 The output for a hierarchical clustering algorithm is a \emph{dendrogram} or
-data equivalent to one. \Cref{fig:clustering-genes} contains one example.
+data equivalent to one. Figure~\ref{fig:clustering-genes} contains one example.
 Another very similar example is a phylogenetic tree seen in
-\Cref{fig:phylogenetic}.
+Figure~\ref{fig:phylogenetic}.
 
 \begin{figure}[h]
 	\centering 
@@ -2001,9 +2001,9 @@ that this data is also equivalent to a dendrogram.
 	\end{algorithmic}
 \end{algorithm}
 
-We will soon go through \Cref{alg:neighbour} on a small example. Unlike
+We will soon go through Algorithm~\ref{alg:neighbour} on a small example. Unlike
 $k$-means, neighbour joining is \emph{deterministic}; that is, it runs the same
-every time on the same input. Notice in \Cref{alg:neighbour} that the actual
+every time on the same input. Notice in Algorithm~\ref{alg:neighbour} that the actual
 points $x_i$ do not matter; instead, it's the distances between the points (and
 clusters) that matter. Thus, we won't specify points but a \emph{graph}.
 
@@ -2016,7 +2016,7 @@ clusters) that matter. Thus, we won't specify points but a \emph{graph}.
 
 Graphs are ubiquitous in mathematics and computer science, and they can be
 easily visualised (for a relatively small amount of vertices). Three graphs can
-be seen in \Cref{fig:3-graphs}.
+be seen in Figure~\ref{fig:3-graphs}.
 
 \begin{figure}[h]
 	\centering
@@ -2097,7 +2097,7 @@ distance between any two points is $8$. We will include an edge between $v_i$
 and $v_j$ in $G_t$ if and only if $d(v_i, v_j)\leq t$. The graph $G_0$ is the
 graph on 8 vertices with no edges, and the graph $G_8$ is the graph on 8
 vertices where every vertex is adjacent to every other vertex (this is called a
-\emph{complete graph}). All of the graphs are shown in \Cref{fig:9-graphs}.
+\emph{complete graph}). All of the graphs are shown in Figure~\ref{fig:9-graphs}.
 
 \begin{figure}[h]
 	\centering 
@@ -2261,28 +2261,28 @@ determine these dendrograms.
 	distinct $v_i, v_j\in S$, the edge $\{v_i, v_j\}$ is in $G$. 
 \end{defn}
 
-Let's consider the graphs in \Cref{fig:9-graphs} again. Using single-linkage, we
+Let's consider the graphs in Figure~\ref{fig:9-graphs} again. Using single-linkage, we
 know that vertices $v_i$ and $v_j$ lie in the same cluster if and only if $v_i$
 and $v_j$ are connected. Therefore, we have exactly one cluster starting at
 $G_5$ using single-linkage. Using complete-linkage, we know that vertices
 $\{v_{i_1}, \dots, v_{i_{\ell}}\}$ form a cluster if and only if they form a
 clique. Hence, we have exactly one cluster starting at $G_8$ using
 complete-linkage. The dendrograms can be seen in
-\Cref{fig:dendrogram-slink,,fig:dendrogram-clink}. 
+Figure~\ref{fig:dendrogram-slink,,fig:dendrogram-clink}. 
 
 % \afterpage{\clearpage}
 
 \begin{figure}[h]
 	\centering 
 	\includegraphics[scale=0.75]{graphics/slink.png}
-	\caption{The dendrogram corresponding to the graphs in \Cref{fig:9-graphs} using single-linkage.}
+	\caption{The dendrogram corresponding to the graphs in Figure~\ref{fig:9-graphs} using single-linkage.}
 	\label{fig:dendrogram-slink}	
 \end{figure}
 
 \begin{figure}[h]
 	\centering 
 	\includegraphics[scale=0.75]{graphics/clink.png}
-	\caption{The dendrogram corresponding to the graphs in \Cref{fig:9-graphs} using complete-linkage.}
+	\caption{The dendrogram corresponding to the graphs in Figure~\ref{fig:9-graphs} using complete-linkage.}
 	\label{fig:dendrogram-clink}	
 \end{figure}
 
