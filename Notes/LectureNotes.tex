@@ -601,7 +601,8 @@ As before, the values we want are given by the equation
 
 \subsection{Why Equation~\eqref{eqn:general-OLS} works}
 
-The heart of least squares is (Euclidean) distance. The distance between two points $x = (x_1,\dots, x_p)$ and $y=(y_1,\dots, y_p)$ in $\R^p$ is 
+The heart of least squares is (Euclidean) distance. The distance between two
+points $x = (x_1,\dots, x_p)$ and $y=(y_1,\dots, y_p)$ in $\R^p$ is 
 \begin{align*}
 	d(x, y) = \| x - y \| = \sqrt{(x_1 - y_1)^2 + (x_2 - y_2)^2 + \cdots + (x_p - y_p)^2}. 
 \end{align*}
@@ -616,6 +617,29 @@ Recall that the dot product of two (column) vectors $u$ and $v$ is
 Thus, the length of $v$ is $\| v \| = \sqrt{v\cdot v}$; in other words $\| v\|^2
 = v\cdot v$. In addition, if $u\cdot v = 0$, we say that $u$ and $v$ are
 \textbf{orthogonal} (or perpendicular).
+
+\begin{defn}
+	Let $U$ be a subspace of a vector space $V$. Define $U^{\perp}$, called the
+	\textbf{orthogonal complement} (or \textbf{perp-space}) of $U$, to be
+	\begin{align*}
+		U^{\perp} &= \left\{v\in V ~\middle|~ \forall u\in U,\ u\cdot v = 0 \right\} . 
+	\end{align*}
+\end{defn}
+
+\begin{lem}\label{lem:orthogonal-complement}
+	Let $U$ be a subspace of $V = \R^p$. 
+	\begin{enumerate}
+		\item $U^{\perp}$ is a subspace of $V$.
+		\item $(U^{\perp})^{\perp} = U$.
+		\item $U\cap U^{\perp} = \{0\}$.
+		\item $\dim(U) + \dim(U^{\perp}) = p$.
+	\end{enumerate}
+\end{lem}
+
+\begin{proof}
+	Try to prove this yourself. If you need help, you can
+	read~\cite{ILA}*{Sec.~6.2}.
+\end{proof}
 
 The goal of least squares is to \textit{minimize distance}; more specifically to
 minimize $\|Y - XB\|$. Note that the column vector $Y$ has entries that are the
@@ -638,7 +662,53 @@ Therefore, $\| Y - XB \|$ is the square root of a sum of squares of the form
 	y_i - b_0 + b_1x_{i1} + b_2x_{i2} + \cdots + b_{p-1}x_{i,p-1}.
 \end{align*}
 Hence minimizing $\| Y - XB \|$ is the same as minimizing $\| Y - XB \|^2$,
-which is a sum of \textit{squares}.
+which is a sum of \textit{squares}. To achieve this, we first need to discuss
+orthogonal decompositions. 
+
+\begin{prop}\label{prop:orthogonal-decomp}
+	Let $U$ be a subspace of $V=\R^p$, and let $v\in V$. We can write $v$
+	uniquely as 
+	\begin{align*}
+		v &= v_U + v_{U^{\perp}},
+	\end{align*}
+	where $v_U$ is in $U$ and $v_{U^{\perp}}$ is in $U^{\perp}$. Additionally,
+	$v_U$ is the unique vector of $U$ closest to~$v$.
+\end{prop}
+
+\begin{proof}
+	Let $m=\dim(U)\leq p$. By Lemma~\ref{lem:orthogonal-complement},
+	$\dim(U^{\perp})=p-m$. From linear algebra, we can extend bases. Thus, if
+	$\{e_1, e_2, \dots, e_m\}$ is a basis for $U$ and $\{e_{m+1},e_{m+2}\dots,
+	e_{p}\}$ is a basis for $U^{\perp}$, then $\{e_1,e_2,\dots, e_p\}$ is a
+	basis for $V$. Therefore, there exist unique $c_1,c_2,\dots, c_p\in \R$ such
+	that 
+	\begin{align*}
+		v &= c_1e_1 + c_2e_2 + \cdots + c_pe_p.
+	\end{align*}
+	Let 
+	\begin{align*}
+		v_{U} &= c_1e_1 + c_2e_2 + \cdots + c_me_m, & v_{U^{\perp}} &= c_{m+1}e_{m+1} + c_{m+2}e_{m+2} + \cdots + c_pe_p,
+	\end{align*}
+	which by construction are contained in $U$ and $U^{\perp}$, respectively.
+	This proves the existence and uniqueness. 
+
+	Suppose $w\in U$. We will show that 
+	\begin{align*}
+		\| v - v_U \| \leq \| v - w \|,
+	\end{align*}
+	and hence $v_U$ is the closest vector to $v$. We write
+	\begin{align*}
+		v - w &= (v - v_U) + (v_U - w).
+	\end{align*}
+	Since $U$ is a subspace and $v_U,w\in U$, their difference $v_U-w$ is in
+	$U$. Since $v_{U^{\perp}} = v - v_U\in U^{\perp}$, we have that $v-v_U$ is
+	orthogonal to $v_U-w$. Now apply the Pythagorean Theorem to the (right!)
+	triangle with sides $v_U-w$ and $v-v_U$ and hypotenuse $v-w$: 
+	\begin{align*}
+		\|v - w\|^2 &= \|v - v_U\|^2 + \|v_U - w\|^2.
+	\end{align*}
+	Since lengths are non-negative, $\|v - w\|^2 \geq \|v - v_U\|^2$, as needed.
+\end{proof}
 
 \begin{prop}
 	The minimal distance $\| Y - XB \|$ is achieved when
@@ -651,10 +721,9 @@ which is a sum of \textit{squares}.
 	Consider the subspace $U = \{Xu ~|~ u\in\R^p\}$ of $\R^n$, and observe that
 	our desired solution $XB$ is contained in $U$. Since $\| Y - XB \|$ is
 	minimal, we must have that the vector $Y - XB$ is orthogonal to all vectors
-	contained in $U$.\footnote{To see why this is true, see Section 6.3.1 of
-	\cite{ILA}, which is all about orthogonal decompositions.} That is, $(Xu)
-	\cdot (Y - XB) = 0$ for all $u\in\R^p$. In other words, we have for all
-	$u\in \R^p$,
+	contained in $U$ by Proposition~\ref{prop:orthogonal-decomp}. In other
+	words, $(Xu) \cdot (Y - XB) = 0$ for all $u\in\R^p$. In other words, we have
+	for all $u\in \R^p$,
 	\begin{align*} 
 		0 = (Xu)^{\tr} (Y - XB) &= u^{\tr} X^{\tr}(Y - XB) \\
 		&= u^{\tr} \left(X^{\tr}Y - X^{\tr}XB\right).
@@ -1428,15 +1497,6 @@ matrix are real, but we still want more---namely orthogonality.
 	Let $M$ be an $n\times n$ matrix with entries in a field $K$. A subspace $U$
 	of $K^n$ is \textbf{$M$-invariant} if $Mu\in U$ for all $u\in U$.
 \end{defn}
-
-\begin{defn}
-	Let $U$ be a subspace of a vector space $V$. Define $U^{\perp}$, sometimes
-	called the \textbf{perp-space} (or orthogonal space) of $U$, to be the set
-	of all $v\in V$ such that $v\cdot u = 0$ for all $u\in U$.
-\end{defn}
-
-One thing to try on your own: Show that $U^{\perp}$ is a subspace of $V$ if $U$
-is a subspace of $V$. 
 
 \begin{lem}\label{lem:perp-inv}
 	Let $M$ be an $n\times n$ real symmetric matrix. If $U$ is an $M$-invariant
