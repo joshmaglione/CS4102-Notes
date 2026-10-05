@@ -1003,8 +1003,6 @@ fits the data.
 	\item What are the $R^2$ values for the examples above?
 \end{enumerate}
 
-\begin{comment}
-
 \section{Principal component analysis}
 
 Principal component analysis (PCA) is a power method of analysis that comes
@@ -1084,9 +1082,6 @@ have low redundancy.) One of the aims of PCA is to lower redundancy. For the
 $2$-dimensional case, this is simple---take the line of best fit, but for
 arbitrarily higher dimensions, this is not obvious. 
 
-% \WEEK{4}
-
-
 Suppose we have $n$ measurements of the same kind (like length)
 \[ 
 	U = \{u_1, u_2, \dots, u_n\} \qquad \text{ and } \qquad V = \{v_1, v_2, \dots, v_n\}
@@ -1137,6 +1132,10 @@ Using \eqref{eqn:vec-covar}, we define the
 		\item The off-diagonal entries of $C_X$ are covariances.
 	\end{enumerate}
 \end{lem}
+
+\begin{proof}
+	Try this yourself using the definitions.
+\end{proof}
 
 Recall our goal is to find a new (and better) basis $\{p_1, p_2, \dots, p_m\}$.
 Namely, we want an invertible matrix $P$ to turn our data $X$ into a data set
@@ -1232,6 +1231,8 @@ necessarily hold for a particular data set.
 	$\overline{x}\in\R^m$. Let $X'$ be the shifted data of $X$, so that its
 	sample mean is $0$. What is $C_{X'}$ in terms of $X$ and $\overline{x}$?
 \end{enumerate}
+
+\begin{comment}
 
 \subsection{Performing PCA}\label{sec:perform-pca}
 
